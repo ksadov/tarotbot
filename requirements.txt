@@ -1,0 +1,4 @@
+python-dotenv
+Pillow
+discord.py
+discord-flags
