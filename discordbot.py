@@ -28,7 +28,8 @@ class Tarot(commands.Cog):
         embed = discord.Embed(title=type.value, type="rich", color=self.color)
         should_inline = type in [ReadingType.ONE, ReadingType.THREE]
         for i, (n,v) in enumerate(response):
-            embed.add_field(name='{}) {}'.format(i+1,n), value=v, inline=should_inline)
+            embed.add_field(name='{}) {}'.format(i+1,n), value=v,
+                            inline=should_inline)
         if not flags['t']:
             im = tarot.cardimg(cards, type)
             with BytesIO() as buf:
