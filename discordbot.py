@@ -16,7 +16,8 @@ class Tarot(commands.Cog):
 
     #descriptions of flags for !help command
     flags_description = ("flags:\n--t\n    Text-only spread.\n--n\n    " +
-                         "Disable inverted cards.")
+                         "Disable inverted cards.\n--e\n    " +
+                         "Enable embedded response.")
 
     def __init__(self, bot):
         self.bot = bot
@@ -25,29 +26,44 @@ class Tarot(commands.Cog):
 
     async def _handle(self, ctx, cards, type, flags):
         response = tarot.cardtxt(cards)
-        embed = discord.Embed(title=type.value, type="rich", color=self.color)
-        should_inline = type in [ReadingType.ONE, ReadingType.THREE]
-        for i, (n,v) in enumerate(response):
-            embed.add_field(name='{}) {}'.format(i+1,n), value=v,
-                            inline=should_inline)
+        #textonly disabled
         if not flags['t']:
             im = tarot.cardimg(cards, type)
             with BytesIO() as buf:
                 im.save(buf, "PNG")
                 buf.seek(0)
-            # im.save(buffered, format="PNG")
                 file = discord.File(fp=buf,filename="image.png")
-            # buffered.close()
+        #embeds enabled
+        if flags['e']:
+            embed = discord.Embed(title=type.value, type="rich",
+                                  color=self.color)
+            should_inline = type in [ReadingType.ONE, ReadingType.THREE]
+            for i, (n,v) in enumerate(response):
+                embed.add_field(name='{}) {}'.format(i+1,n), value=v,
+                                inline=should_inline)
+            #textonly disabled
+            if not flags['t']:
                 embed.set_image(url="attachment://image.png")
-            await ctx.send(file=file, embed=embed)
-            # await ctx.send(file=file, embed=embed)
+                await ctx.send(file=file, embed=embed)
+            else:
+                await ctx.send(embed=embed)
+        #embeds disabled
         else:
-            await ctx.send(embed=embed)
+            responsetext = ""
+            for i, (n,v) in enumerate(response):
+                responsetext = (responsetext + "\n**" + str(i+1) + ") " +
+                                n + "**\n" + v)
+            #textonly disabled
+            if not flags['t']:
+                await ctx.send(file=file)
+            await ctx.send(responsetext)
 
     @flags.add_flag("--t", action='store_true', default = False,
                     help="text only mode")
     @flags.add_flag("--n", action='store_false', default = True,
                     help="disable inversion")
+    @flags.add_flag("--e", action='store_true', default = False,
+                    help="enable embed")
     @flags.command(name="1card", brief = "1 card spread",
                    description = flags_description)
     async def onecard(self, ctx, **flags):
@@ -59,6 +75,8 @@ class Tarot(commands.Cog):
                     help="text only mode")
     @flags.add_flag("--n", action='store_false', default = True,
                     help="disable inversion")
+    @flags.add_flag("--e", action='store_true', default = False,
+                    help="enable embed")
     @flags.command(name="3card", brief = "3 card spread",
                    description = flags_description)
     async def threecard(self, ctx, **flags):
@@ -70,6 +88,8 @@ class Tarot(commands.Cog):
                     help="text only mode")
     @flags.add_flag("--n", action='store_false', default = True,
                     help="disable inversion")
+    @flags.add_flag("--e", action='store_true', default = False,
+                    help="enable embed")
     @flags.command(name="5card", brief = "5 card spread",
                    description = flags_description)
     async def fivecard(self, ctx, **flags):
@@ -81,6 +101,8 @@ class Tarot(commands.Cog):
                     help="text only mode")
     @flags.add_flag("--n", action='store_false', default = True,
                     help="disable inversion")
+    @flags.add_flag("--e", action='store_true', default = False,
+                    help="enable embed")
     @flags.command(name="celtic", brief = "Celtic Cross spread",
                    description = flags_description)
     async def celticcross(self, ctx, **flags):
