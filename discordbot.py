@@ -20,7 +20,8 @@ class Tarot(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        self.color = discord.Color.from_rgb(107,46,244)
+        self.color = discord.Color.purple()
+        # self.color = discord.Color.from_rgb(107,46,244)
 
     async def _handle(self, ctx, cards, type, flags):
         response = tarot.cardtxt(cards)
