@@ -1,6 +1,13 @@
 import random
 from PIL import Image, ImageDraw
 from typing import List
+from enum import Enum
+
+class ReadingType(Enum):
+    ONE = "One card"
+    THREE = "Three cards"
+    FIVE = "Five cards"
+    CELTIC = "Celtic Cross"
 
 class Card:
     """A class used to represent a tarot card.
@@ -34,6 +41,15 @@ class Card:
         else:
             descr = self.name + " (reversed): " + self.reverse
         return descr
+
+    def get_name(self) -> str:
+        return "{} ({})".format(self.name, "upright" if self.up else "reversed")
+
+    def get_desc(self) -> str:
+        if self.up:
+            return self.upright
+        else:
+            return self.reverse
 
 def make_deck() -> List[Card]:
     """Returns a full deck of tarot cards."""
@@ -293,12 +309,9 @@ def draw(n: int, invert=True) -> List[Card]:
         hand.append(mycard)
     return hand
 
-def cardtxt(cards: List[Card]) -> str:
+def cardtxt(cards: List[Card]):
     """Returns a string containing the  descriptions of a list of cards."""
-    descstring = "\n"
-    for c in cards:
-        descstring = descstring + c.description() + "\n"
-    return descstring
+    return list(map(lambda card: (card.get_name(), card.get_desc()), cards))
 
 def makeImgList (cards: List[Card]):
     """Returns a list of Images corresponding to cards."""
@@ -407,7 +420,7 @@ def celticimg (cards, cardwidth: int, cardheight: int) -> Image:
     img.paste(card2, (column1_5, row2_5 + 2*image_border))
     return img
 
-def cardimg(cardsO: List[Card], command: str) -> Image:
+def cardimg(cardsO: List[Card], command: ReadingType) -> Image:
     """Returns an Image of the cards in cards0 in a spread specified by command.
 
         Args:
@@ -418,14 +431,14 @@ def cardimg(cardsO: List[Card], command: str) -> Image:
     cardwidth = max(map(lambda x: x.width, cards))
     cardheight = max(map(lambda x: x.height, cards))
     img = None
-    if (command == "1card"):
+    if (command == ReadingType.ONE):
         img = draw1img(cards, cardwidth, cardheight)
-    elif (command == "3card"):
+    elif (command == ReadingType.THREE):
         img = draw3img(cards, cardwidth, cardheight)
-    elif (command == "5card"):
+    elif (command == ReadingType.FIVE):
         img = draw5img(cards, cardwidth, cardheight)
-    elif (command == "celtic"):
+    elif (command == ReadingType.CELTIC):
         img = celticimg(cards, cardwidth, cardheight)
     else:
         raise Exception("invalid command")
-    img.save("cardimg.png")
+    return img
