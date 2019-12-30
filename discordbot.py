@@ -23,7 +23,8 @@ class Tarot(commands.Cog):
 
     async def _handle(self, ctx, cards, type, flags):
         response = tarot.cardtxt(cards)
-        embed = discord.Embed(title=type.value, type="rich", color=discord.Color.teal())
+        embed = discord.Embed(title=type.value, type="rich",
+                              color=discord.Color.magenta())
         for (n,v) in response:
             embed.add_field(name=n, value=v)
         if not flags['t']:
@@ -45,10 +46,9 @@ class Tarot(commands.Cog):
     @flags.add_flag("--n", action='store_false', default = True,
                     help="disable inversion")
     @flags.command(name="1card", brief = "1 card spread",
-                   description =
-                   "A one-card spread.\n\n" + "\n" + flags_description)
+                   description = flags_description)
     async def onecard(self, ctx, **flags):
-        """1 card spread"""
+        """A one-card spread."""
         cards = tarot.draw(1, flags['n'])
         await self._handle(ctx, cards, ReadingType.ONE, flags)
 
@@ -57,10 +57,9 @@ class Tarot(commands.Cog):
     @flags.add_flag("--n", action='store_false', default = True,
                     help="disable inversion")
     @flags.command(name="3card", brief = "3 card spread",
-                   description =
-                   "A three-card spread.\n\n" + "\n" + flags_description)
+                   description = flags_description)
     async def threecard(self, ctx, **flags):
-        """3 card spread"""
+        """A three-card spread."""
         cards = tarot.draw(3, flags['n'])
         await self._handle(ctx, cards, ReadingType.THREE, flags)
 
@@ -69,10 +68,9 @@ class Tarot(commands.Cog):
     @flags.add_flag("--n", action='store_false', default = True,
                     help="disable inversion")
     @flags.command(name="5card", brief = "5 card spread",
-                   description =
-                   "A five-card spread.\n\n" + "\n" + flags_description)
+                   description = flags_description)
     async def fivecard(self, ctx, **flags):
-        """5 card spread"""
+        """A five-card spread."""
         cards = tarot.draw(5, flags['n'])
         await self._handle(ctx, cards, ReadingType.FIVE, flags)
 
@@ -81,11 +79,9 @@ class Tarot(commands.Cog):
     @flags.add_flag("--n", action='store_false', default = True,
                     help="disable inversion")
     @flags.command(name="celtic", brief = "Celtic Cross spread",
-                   description =
-                   "A ten-card Celtic Cross spread.\n\n" + "\n" +
-                   flags_description)
+                   description = flags_description)
     async def celticcross(self, ctx, **flags):
-        """celtic cross spread"""
+        """A ten-card Celtic Cross spread."""
         cards = tarot.draw(10, flags['n'])
         await self._handle(ctx, cards, ReadingType.CELTIC, flags)
 
