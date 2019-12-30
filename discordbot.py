@@ -4,7 +4,7 @@ from tarot import ReadingType
 import discord
 from dotenv import load_dotenv
 from discord.ext import flags, commands
-import tempfile
+from io import BytesIO
 
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN', '/tarotbotenv')
@@ -23,16 +23,20 @@ class Tarot(commands.Cog):
 
     async def _handle(self, ctx, cards, type, flags):
         response = tarot.cardtxt(cards)
-        embed = discord.Embed(title=type.value, type="rich", color=discord.Color.magenta())
+        embed = discord.Embed(title=type.value, type="rich", color=discord.Color.teal())
         for (n,v) in response:
             embed.add_field(name=n, value=v)
         if not flags['t']:
             im = tarot.cardimg(cards, type)
-            with tempfile.NamedTemporaryFile(dir="tmp") as fp:
-                im.save("{}.png".format(fp.name))
-                file = discord.File("{}.png".format(fp.name),filename="image.png")
+            with BytesIO() as buf:
+                im.save(buf, "PNG")
+                buf.seek(0)
+            # im.save(buffered, format="PNG")
+                file = discord.File(fp=buf,filename="image.png")
+            # buffered.close()
                 embed.set_image(url="attachment://image.png")
-                await ctx.send(file=file, embed=embed)
+            await ctx.send(file=file, embed=embed)
+            # await ctx.send(file=file, embed=embed)
         else:
             await ctx.send(embed=embed)
 
