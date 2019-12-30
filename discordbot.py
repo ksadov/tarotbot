@@ -9,7 +9,7 @@ from io import BytesIO
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN', '/tarotbotenv')
 
-bot = commands.Bot(command_prefix = '!')
+bot = commands.Bot(command_prefix = 't!')
 
 class Tarot(commands.Cog):
     """Tarot spread commands."""
@@ -20,13 +20,14 @@ class Tarot(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+        self.color = discord.Color.from_rgb(107,46,244)
 
     async def _handle(self, ctx, cards, type, flags):
         response = tarot.cardtxt(cards)
-        embed = discord.Embed(title=type.value, type="rich",
-                              color=discord.Color.magenta())
-        for (n,v) in response:
-            embed.add_field(name=n, value=v)
+        embed = discord.Embed(title=type.value, type="rich", color=self.color)
+        should_inline = type in [ReadingType.ONE, ReadingType.THREE]
+        for i, (n,v) in enumerate(response):
+            embed.add_field(name='{}) {}'.format(i+1,n), value=v, inline=should_inline)
         if not flags['t']:
             im = tarot.cardimg(cards, type)
             with BytesIO() as buf:
