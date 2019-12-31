@@ -17,7 +17,7 @@ class Tarot(commands.Cog):
     #descriptions of flags for !help command
     flags_description = ("flags:\n--t\n    Text-only spread.\n--n\n    " +
                          "Disable inverted cards.\n--e\n    " +
-                         "Enable embedded response.\n--i\n    " +
+                         "Send unembedded response.\n--i\n    " +
                          "Image-only spread.")
 
     def __init__(self, bot):
@@ -67,7 +67,7 @@ class Tarot(commands.Cog):
                     help="text only mode")
     @flags.add_flag("--n", action='store_false', default = True,
                     help="disable inversion")
-    @flags.add_flag("--e", action='store_true', default = False,
+    @flags.add_flag("--e", action='store_false', default = True,
                     help="enable embed")
     @flags.add_flag("--i", action='store_true', default = False,
                     help="disable text")
@@ -82,8 +82,8 @@ class Tarot(commands.Cog):
                     help="text only mode")
     @flags.add_flag("--n", action='store_false', default = True,
                     help="disable inversion")
-    @flags.add_flag("--e", action='store_true', default = False,
-                    help="enable embed")
+    @flags.add_flag("--e", action='store_false', default = True,
+                    help="disable embed")
     @flags.add_flag("--i", action='store_true', default = False,
                     help="disable text")
     @flags.command(name="3card", brief = "3 card spread",
@@ -97,8 +97,8 @@ class Tarot(commands.Cog):
                     help="text only mode")
     @flags.add_flag("--n", action='store_false', default = True,
                     help="disable inversion")
-    @flags.add_flag("--e", action='store_true', default = False,
-                    help="enable embed")
+    @flags.add_flag("--e", action='store_false', default = True,
+                    help="disable embed")
     @flags.add_flag("--i", action='store_true', default = False,
                     help="disable text")
     @flags.command(name="5card", brief = "5 card spread",
@@ -112,8 +112,8 @@ class Tarot(commands.Cog):
                     help="text only mode")
     @flags.add_flag("--n", action='store_false', default = True,
                     help="disable inversion")
-    @flags.add_flag("--e", action='store_true', default = False,
-                    help="enable embed")
+    @flags.add_flag("--e", action='store_false', default = True,
+                    help="disable embed")
     @flags.add_flag("--i", action='store_true', default = False,
                     help="disable text")
     @flags.command(name="celtic", brief = "Celtic Cross spread",
