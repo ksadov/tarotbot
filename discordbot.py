@@ -7,7 +7,7 @@ from discord.ext import flags, commands
 from io import BytesIO
 
 load_dotenv()
-token = os.getenv('DISCORD_TOKEN', '/tarotbotenv')
+token = os.getenv('DISCORD_TOKEN')
 
 bot = commands.Bot(command_prefix = 't!')
 
