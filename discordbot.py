@@ -71,13 +71,13 @@ class Tarot(commands.Cog):
     """Tarot spread commands."""
 
     #descriptions of flags for !help command
-    flags_description = ("flags:\n--t\n    Text-only spread.\n--n\n    " +
-                         "Disable inverted cards.\n"+
+    flags_description = ("flags:\n" +
+    					 "--t\n\tText-only spread.\n" +
+    					 "--n\n\tDisable inverted cards.\n" +
                          "--M\n\tOnly draw major arcana cards\n" +
                          "--m\n\tOnly draw minor arcana cards\n" +
-                         "Disable inverted cards.\n--e\n    " +
-                         "Send unembedded response.\n--i\n    " +
-                         "Image-only spread.")
+                         "--e\n\tSend unembedded response.\n" +
+                         "--i\n\tImage-only spread.")
 
     def __init__(self, bot):
         self.bot = bot
