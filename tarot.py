@@ -51,9 +51,9 @@ class Card:
         else:
             return self.reverse
 
-def make_deck() -> List[Card]:
+def make_deck(major_only, minor_only) -> List[Card]:
     """Returns a full deck of tarot cards."""
-    return([
+    major = [
         Card("The World",
              "fulfillment, harmony, completion",
              "incompletion, no closure", "21M"),
@@ -119,7 +119,9 @@ def make_deck() -> List[Card]:
              "trickery, illusions, out of touch", "1M"),
         Card("The Fool",
              "innocence, new beginnings, free spirit",
-             "recklessness, taken advantage of, inconsideration", "0M"),
+             "recklessness, taken advantage of, inconsideration", "0M")
+    ]
+    minor = [
         Card("Seven of Wands",
              "perseverance, defensive, maintaining control",
              "give up, destroyed confidence, overwhelmed", "7W"),
@@ -288,18 +290,26 @@ def make_deck() -> List[Card]:
         Card("Ace of Pentacles",
              "opportunity, prosperity, new venture",
              "lost opportunity, missed chance, bad investment", "AP")
-    ])
+        ]
+    if major_only:
+        return major
+    elif minor_only:
+        return minor
+    else:
+        return major + minor
 
-def draw(n: int, invert=True) -> List[Card]:
+def draw(n: int, invert=True, major_only=False, minor_only=False) -> List[Card]:
     """Returns a list of n random cards from a full deck of cards.
 
         Args:
             n: the number of cards to draw
             invert: If True, cards have a 1/5 chance of being inverted.
                     Otherwise, no cards will be inverted.
+            major_only: If True, only major arcana cards will be drawn
+            minor_only: If True, only minor arcana cards will be drawn
 
     """
-    deck = make_deck()
+    deck = make_deck(major_only, minor_only)
     hand = []
     for i in range(n):
         mycard = deck[random.randrange(len(deck))]
