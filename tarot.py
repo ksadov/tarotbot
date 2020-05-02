@@ -320,7 +320,7 @@ def draw(n: int, invert=True, major_only=False, minor_only=False) -> List[Card]:
     return hand
 
 def cardtxt(cards: List[Card]):
-    """Returns a string containing the  descriptions of a list of cards."""
+    """Returns a list of tuples containing descriptions of a list of cards."""
     return list(map(lambda card: (card.get_name(), card.get_desc()), cards))
 
 def makeImgList (cards: List[Card]):
