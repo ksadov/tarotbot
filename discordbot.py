@@ -9,7 +9,8 @@ from io import BytesIO
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
 
-bot = commands.Bot(command_prefix = 't!', discord.Game(name="t!help for usage"))
+bot = commands.Bot(activity = discord.Game(name="t!help for usage"),
+                   command_prefix = 't!')
 
 #flags
 FLAGS = {
