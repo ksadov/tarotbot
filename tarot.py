@@ -2,12 +2,18 @@ import random
 from PIL import Image, ImageDraw
 from typing import List
 from enum import Enum
+from os import path
 
 class ReadingType(Enum):
     ONE = "One card"
     THREE = "Three cards"
     FIVE = "Five cards"
     CELTIC = "Celtic Cross"
+
+
+class Decks(Enum):
+    DEFAULT = "default"
+    SWISS = "swiss"
 
 class Card:
     """A class used to represent a tarot card.
@@ -323,11 +329,11 @@ def cardtxt(cards: List[Card]):
     """Returns a list of tuples containing descriptions of a list of cards."""
     return list(map(lambda card: (card.get_name(), card.get_desc()), cards))
 
-def makeImgList (cards: List[Card]):
+def makeImgList (cards: List[Card], deck: Decks):
     """Returns a list of Images corresponding to cards."""
     imgarray = []
     for c in cards:
-        newcard = Image.open("imgsrc/" + c.code + ".JPG").convert("RGBA")
+        newcard = Image.open(path.join("decks",deck.value,c.code + ".jpg")).convert("RGBA")
         if not c.up:
             newcardrev = newcard.rotate(180, expand = 1)
             imgarray.append(newcardrev)
@@ -430,14 +436,14 @@ def celticimg (cards, cardwidth: int, cardheight: int) -> Image:
     img.paste(card2, (column1_5, row2_5 + 2*image_border))
     return img
 
-def cardimg(cardsO: List[Card], command: ReadingType) -> Image:
+def cardimg(cardsO: List[Card], deck: Decks, command: ReadingType) -> Image:
     """Returns an Image of the cards in cards0 in a spread specified by command.
 
         Args:
             cards0: the cards in the spread
             command: the spread. Valid spreads are 1card, 3card, 5card, celtic
     """
-    cards = makeImgList(cardsO)
+    cards = makeImgList(cardsO, deck)
     cardwidth = max(map(lambda x: x.width, cards))
     cardheight = max(map(lambda x: x.height, cards))
     img = None
