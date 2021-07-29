@@ -11,13 +11,15 @@ from discord_slash.utils.manage_components import create_button, create_actionro
 from discord_slash.model import ButtonStyle
 
 load_dotenv()
-token = os.getenv('TEST_TOKEN')
-application_id = os.getenv('TEST_APPLICATION_ID')
+token = os.getenv('DISCORD_TOKEN')
+application_id = os.getenv('DISCORD_APPLICATION_ID')
 
 client = discord.Client()
 slash = SlashCommand(client, sync_commands=True)
 
-guild_ids = [357633267861553162, 410850945229127692]
+# guild_ids = [357633267861553162, 410850945229127692]
+# uncomment to enable global commands
+guild_ids = None
 
 def createButtons(prefix=""):
     return create_actionrow(
@@ -92,7 +94,18 @@ def createComponents(noinvert = False, nomajor = False, nominor = False, notext 
     return [o,c,b]
 
 default_components = createComponents()
-
+about_components = [create_actionrow(
+    create_button(
+        style=ButtonStyle.URL,
+        url="https://discord.com/api/oauth2/authorize?client_id=659747523354689549&scope=applications.commands",
+        label="Add to server"
+    ),
+    create_button(
+        style=ButtonStyle.URL,
+        url="https://discord.gg/xagYSd84ZX",
+        label="Discord Link"
+    )
+)]
 color = discord.Color.purple()
 async def _handle(ctx, cards, deck, type, notext, noimage, noembed):
     response = tarot.cardtxt(cards)
@@ -138,6 +151,12 @@ async def on_ready():
 async def _tarot(ctx):
     await ctx.send("What type of reading would you like?", components=default_components, hidden=True) #flags=64
 
+@slash.slash(name="tarothelp",
+             description="Learn about the tarot bot",
+             guild_ids=guild_ids)
+async def _about(ctx):
+    await ctx.send("For support or to request new features, join our discord server.", components=about_components, hidden=True)
+
 # @slash.component_callback()
 # async def _tarotoptions(ctx):
 #     await ctx.send("not implemented")
@@ -160,8 +179,12 @@ async def on_component(ctx):
         nomajor = "major" in ctx.selected_options
         nominor = "minor" in ctx.selected_options
         notext = "text" in ctx.selected_options
-        noimage= "image" in ctx.selected_options
+        noimage = "image" in ctx.selected_options
         noembed = "embed" in ctx.selected_options
+        if nomajor and nominor:
+            pass
+        if notext and noimage:
+            pass
         await ctx.edit_origin(components = createComponents(noinvert,nomajor,nominor,notext,noimage,noembed,deck))
     elif "_cardtype" in ctx.custom_id:
         if "swiss" in ctx.selected_options:
@@ -194,8 +217,7 @@ async def on_component(ctx):
 client.run(token)
 
 ## TODO:
-# switch to cog
 # check compatibility of options
-# multiple card types & default
 # help command with guide for celtic cross
 # delete component message and give error if invalid request sent
+# handle card sizes

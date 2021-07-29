@@ -9,7 +9,7 @@ from io import BytesIO
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
 
-bot = commands.Bot(activity = discord.Game(name="t!help for usage"),
+bot = commands.Bot(activity = discord.Game(name="t!help. switching to slash commands"),
                    command_prefix = 't!')
 
 #flags
