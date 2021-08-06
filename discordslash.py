@@ -14,7 +14,7 @@ application_id = os.getenv('DISCORD_APPLICATION_ID')
 # token = os.getenv('TEST_TOKEN')
 # application_id = os.getenv('TEST_APPLICATION_ID')
 
-client = discord.Client()
+client = discord.Client(activity=discord.CustomActivity("switching to slash commands"))
 slash = SlashCommand(client, sync_commands=True)
 
 # guild_ids = [357633267861553162, 410850945229127692]
@@ -146,6 +146,19 @@ async def _handle(ctx, cards, deck, type, notext, noimage, noembed, private):
 @client.event
 async def on_ready():
     print("Ready!")
+
+#TEMPORARY HELP. REMOVE THIS
+#if recieves message that starts with t!help
+#send help message
+@client.event
+async def on_message(message):
+    if message.author == client.user:
+        return
+
+    if message.content.startswith('t!help'):
+        await message.channel.send('This bot is switching to slash commands. if /tarot does not work, please re-add the bot:', components=about_components)
+
+
 
 @slash.slash(name="tarot",
              description="Start a Tarot reading",
