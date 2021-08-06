@@ -5,14 +5,14 @@ import discord
 from dotenv import load_dotenv
 from io import BytesIO
 from discord_slash import SlashCommand
-from discord_slash.model import SlashCommandOptionType
-from discord_slash.utils.manage_commands import create_option, create_choice
 from discord_slash.utils.manage_components import create_button, create_actionrow, create_select, create_select_option
 from discord_slash.model import ButtonStyle
 
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
 application_id = os.getenv('DISCORD_APPLICATION_ID')
+# token = os.getenv('TEST_TOKEN')
+# application_id = os.getenv('TEST_APPLICATION_ID')
 
 client = discord.Client()
 slash = SlashCommand(client, sync_commands=True)
@@ -46,7 +46,7 @@ def createButtons(prefix=""):
     )
 
 def createOptions(prefix="", noinvert = False, nomajor = False, nominor = False, notext = False,
-                  noimage = False, noembed = False):
+                  noimage = False, noembed = False, private = False):
     return create_actionrow(create_select(
         options=[# the options in your dropdown
             create_select_option("No Text", value="text", description="Do not show card descriptions", default=notext),
@@ -55,10 +55,11 @@ def createOptions(prefix="", noinvert = False, nomajor = False, nominor = False,
             create_select_option("No Inversions", value="invert", description="Only draw upright cards", default=noinvert),
             create_select_option("No Major Arcana", value="major", description="Only draw minor arcana cards", default=nomajor),
             create_select_option("No Minor Arcana", value="minor", description="Only draw major arcana cards", default=nominor),
+            create_select_option("Private Reading", value="private", description="Send reading privately", default=private)
         ],
         placeholder="Reading Settings",  # the placeholder text to show when no options have been chosen
         min_values=0,  # the minimum number of options a user must select
-        max_values=6,  # the maximum number of options a user can select
+        max_values=7,  # the maximum number of options a user can select
         custom_id="_tarotoptions"
     ))
 
@@ -79,7 +80,7 @@ def createCardSelector(prefix="", selected=Decks.DEFAULT):
 deckMap = {Decks.DEFAULT: "", Decks.SWISS:"_*s*"}
 
 def createComponents(noinvert = False, nomajor = False, nominor = False, notext = False,
-                  noimage = False, noembed = False, deck=Decks.DEFAULT):
+                  noimage = False, noembed = False, private = False, deck=Decks.DEFAULT):
     prefix = ""
     prefix += "_i" if noinvert else ""
     prefix += "_M" if nomajor else ""
@@ -87,10 +88,11 @@ def createComponents(noinvert = False, nomajor = False, nominor = False, notext 
     prefix += "_t" if notext else ""
     prefix += "_im" if noimage else ""
     prefix += "_e" if noembed else ""
+    prefix += "_p" if private else ""
     prefix += deckMap[deck]
     b = createButtons(prefix)
     c = createCardSelector(prefix, deck)
-    o = createOptions(prefix, noinvert, nomajor, nominor, notext, noimage, noembed)
+    o = createOptions(prefix, noinvert, nomajor, nominor, notext, noimage, noembed, private)
     return [o,c,b]
 
 default_components = createComponents()
@@ -107,7 +109,7 @@ about_components = [create_actionrow(
     )
 )]
 color = discord.Color.purple()
-async def _handle(ctx, cards, deck, type, notext, noimage, noembed):
+async def _handle(ctx, cards, deck, type, notext, noimage, noembed, private):
     response = tarot.cardtxt(cards)
     if not noimage:
         im = tarot.cardimg(cards, deck, type)
@@ -126,20 +128,20 @@ async def _handle(ctx, cards, deck, type, notext, noimage, noembed):
                                 inline=should_inline)
         if not noimage:
             embed.set_image(url="attachment://image.png")
-            await ctx.send(file=file, embed=embed)
+            await ctx.send(file=file, embed=embed, hidden=private)
         else:
-            await ctx.send(embed=embed)
+            await ctx.send(embed=embed, hidden=private)
     else:
         responsetext = ""
         for i, (n,v) in enumerate(response):
             responsetext = (responsetext + "\n**" + str(i+1) + ") " +
                             n + "**\n" + v)
         if not noimage and not notext:
-            await ctx.send(responsetext, file=file)
+            await ctx.send(responsetext, file=file, hidden=private)
         elif not notext:
-            await ctx.send(responsetext)
+            await ctx.send(responsetext, hidden=private)
         elif not noimage:
-            await ctx.send(file=file)
+            await ctx.send(file=file, hidden=private)
 
 @client.event
 async def on_ready():
@@ -170,6 +172,7 @@ async def on_component(ctx):
     notext = "_t_" in ctx.custom_id
     noimage= "_im_" in ctx.custom_id
     noembed = "_e_" in ctx.custom_id
+    private = "_p_" in ctx.custom_id
     deck = Decks.DEFAULT
     if "*s*" in ctx.custom_id:
         deck = Decks.SWISS
@@ -181,17 +184,18 @@ async def on_component(ctx):
         notext = "text" in ctx.selected_options
         noimage = "image" in ctx.selected_options
         noembed = "embed" in ctx.selected_options
+        private = "private" in ctx.selected_options
         if nomajor and nominor:
             pass
         if notext and noimage:
             pass
-        await ctx.edit_origin(components = createComponents(noinvert,nomajor,nominor,notext,noimage,noembed,deck))
+        await ctx.edit_origin(components = createComponents(noinvert,nomajor,nominor,notext,noimage,noembed,private,deck))
     elif "_cardtype" in ctx.custom_id:
         if "swiss" in ctx.selected_options:
             deck = Decks.SWISS
         else:
             deck = Decks.DEFAULT
-        await ctx.edit_origin(components = createComponents(noinvert,nomajor,nominor,notext,noimage,noembed,deck))
+        await ctx.edit_origin(components = createComponents(noinvert,nomajor,nominor,notext,noimage,noembed,private,deck))
     else:
         numCards = 0
         readingType = None
@@ -211,7 +215,7 @@ async def on_component(ctx):
             #TODO: error
             pass
         cards = tarot.draw(numCards, not noinvert, nominor, nomajor)
-        await _handle(ctx, cards, deck, readingType, notext, noimage, noembed)
+        await _handle(ctx, cards, deck, readingType, notext, noimage, noembed, private)
 
 
 client.run(token)
