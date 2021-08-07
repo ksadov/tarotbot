@@ -14,7 +14,7 @@ application_id = os.getenv('DISCORD_APPLICATION_ID')
 # token = os.getenv('TEST_TOKEN')
 # application_id = os.getenv('TEST_APPLICATION_ID')
 
-client = discord.Client(activity=discord.CustomActivity("switching to slash commands"))
+client = discord.Client(activity=discord.Game("switching to slash commands"))
 slash = SlashCommand(client, sync_commands=True)
 
 # guild_ids = [357633267861553162, 410850945229127692]
@@ -237,4 +237,3 @@ client.run(token)
 # check compatibility of options
 # help command with guide for celtic cross
 # delete component message and give error if invalid request sent
-# handle card sizes
