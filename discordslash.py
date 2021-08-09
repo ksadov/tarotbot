@@ -8,18 +8,24 @@ from discord_slash import SlashCommand
 from discord_slash.utils.manage_components import create_button, create_actionrow, create_select, create_select_option
 from discord_slash.model import ButtonStyle
 
+DEV_BUILD = False
+
 load_dotenv()
-token = os.getenv('DISCORD_TOKEN')
-application_id = os.getenv('DISCORD_APPLICATION_ID')
-# token = os.getenv('TEST_TOKEN')
-# application_id = os.getenv('TEST_APPLICATION_ID')
+
+if DEV_BUILD:
+    token = os.getenv('TEST_TOKEN')
+    application_id = os.getenv('TEST_APPLICATION_ID')
+    guild_ids = [357633267861553162, 410850945229127692]
+else:
+    token = os.getenv('DISCORD_TOKEN')
+    application_id = os.getenv('DISCORD_APPLICATION_ID')
+    guild_ids = None
 
 client = discord.Client(activity=discord.Game("switching to slash commands"))
 slash = SlashCommand(client, sync_commands=True)
 
-# guild_ids = [357633267861553162, 410850945229127692]
 # uncomment to enable global commands
-guild_ids = None
+
 
 def createButtons(prefix=""):
     return create_actionrow(
@@ -111,6 +117,7 @@ about_components = [create_actionrow(
 color = discord.Color.purple()
 async def _handle(ctx, cards, deck, type, notext, noimage, noembed, private):
     response = tarot.cardtxt(cards)
+    who = "Reading for " + ctx.author.mention + "\n"
     if not noimage:
         im = tarot.cardimg(cards, deck, type)
         with BytesIO() as buf:
@@ -118,7 +125,7 @@ async def _handle(ctx, cards, deck, type, notext, noimage, noembed, private):
             buf.seek(0)
             file = discord.File(fp=buf,filename="image.png")
     if not noembed:
-        embed = discord.Embed(title=type.value, type="rich",
+        embed = discord.Embed(title=type.value + " reading for " +ctx.author.display_name, type="rich",
                               color=color)
 
         if not notext:
@@ -137,11 +144,11 @@ async def _handle(ctx, cards, deck, type, notext, noimage, noembed, private):
             responsetext = (responsetext + "\n**" + str(i+1) + ") " +
                             n + "**\n" + v)
         if not noimage and not notext:
-            await ctx.send(responsetext, file=file, hidden=private)
+            await ctx.send(who + responsetext, file=file, hidden=private)
         elif not notext:
-            await ctx.send(responsetext, hidden=private)
+            await ctx.send(who + responsetext, hidden=private)
         elif not noimage:
-            await ctx.send(file=file, hidden=private)
+            await ctx.send(who, file=file, hidden=private)
 
 @client.event
 async def on_ready():
