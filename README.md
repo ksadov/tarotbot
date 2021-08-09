@@ -14,3 +14,6 @@ This bot now uses slash commands!
 Type `/tarot` to invoke a UI for doing a reading. Choose all of your settings and then press a button for the type of reading you want.
 
 Type `/tarothelp` for information about the bot.
+
+## Known issues
+- private readings are missing images
