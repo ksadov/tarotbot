@@ -8,11 +8,9 @@ from discord_slash import SlashCommand
 from discord_slash.utils.manage_components import create_button, create_actionrow, create_select, create_select_option
 from discord_slash.model import ButtonStyle
 
-DEV_BUILD = False
-
 load_dotenv()
 
-if DEV_BUILD:
+if os.getenv("TAROT_DEVELOPMENT"):
     token = os.getenv('TEST_TOKEN')
     application_id = os.getenv('TEST_APPLICATION_ID')
     guild_ids = [357633267861553162, 410850945229127692]
