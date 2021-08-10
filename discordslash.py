@@ -113,9 +113,9 @@ about_components = [create_actionrow(
     )
 )]
 color = discord.Color.purple()
-async def _handle(ctx, cards, deck, type, notext, noimage, noembed, private):
+async def _handle(ctx, cards, type, deck=Decks.DEFAULT, notext=False, noimage=False, noembed=False, private=False):
     response = tarot.cardtxt(cards)
-    who = "Reading for " + ctx.author.mention + "\n"
+    who = ctx.author.mention + ", here is your reading\n"
     if not noimage:
         im = tarot.cardimg(cards, deck, type)
         with BytesIO() as buf:
@@ -133,9 +133,9 @@ async def _handle(ctx, cards, deck, type, notext, noimage, noembed, private):
                                 inline=should_inline)
         if not noimage:
             embed.set_image(url="attachment://image.png")
-            await ctx.send(file=file, embed=embed, hidden=private)
+            await ctx.send(who, file=file, embed=embed, hidden=private)
         else:
-            await ctx.send(embed=embed, hidden=private)
+            await ctx.send(who, embed=embed, hidden=private)
     else:
         responsetext = ""
         for i, (n,v) in enumerate(response):
@@ -176,6 +176,27 @@ async def _tarot(ctx):
              guild_ids=guild_ids)
 async def _about(ctx):
     await ctx.send("For support or to request new features, join our discord server.", components=about_components, hidden=True)
+
+@slash.slash(name="1card",
+             description="One card tarot reading with default settings",
+             guild_ids=guild_ids)
+async def _1card(ctx):
+    cards = tarot.draw(1)
+    await _handle(ctx, cards, ReadingType.ONE)
+
+@slash.slash(name="3card",
+             description="Three card tarot reading with default settings",
+             guild_ids=guild_ids)
+async def _1card(ctx):
+    cards = tarot.draw(3)
+    await _handle(ctx, cards, ReadingType.THREE)
+
+@slash.slash(name="5card",
+             description="Five card tarot reading with default settings",
+             guild_ids=guild_ids)
+async def _1card(ctx):
+    cards = tarot.draw(5)
+    await _handle(ctx, cards, ReadingType.FIVE)
 
 # @slash.component_callback()
 # async def _tarotoptions(ctx):
@@ -233,7 +254,7 @@ async def on_component(ctx):
             #TODO: error
             pass
         cards = tarot.draw(numCards, not noinvert, nominor, nomajor)
-        await _handle(ctx, cards, deck, readingType, notext, noimage, noembed, private)
+        await _handle(ctx, cards, readingType, deck, notext, noimage, noembed, private)
 
 
 client.run(token)
