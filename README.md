@@ -15,5 +15,15 @@ Type `/tarot` to invoke a UI for doing a reading. Choose all of your settings an
 
 Type `/tarothelp` for information about the bot.
 
+`/1card` gives a 1 card reading with default settings
+
+`/3card` gives a 3 card reading with default settings
+
+`/5card` gives a 5 card reading with default settings
+
 ## Known issues
 - private readings are missing images
+
+
+## Support
+For support, please join our [discord server](https://discord.gg/xagYSd84ZX)
