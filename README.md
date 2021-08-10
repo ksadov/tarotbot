@@ -23,6 +23,7 @@ Type `/tarothelp` for information about the bot.
 
 ## Known issues
 - private readings are missing images
+- because of ephemeral messages, the tarot bot replies to deleted messages
 
 
 ## Support
