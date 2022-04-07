@@ -1,6 +1,7 @@
 import discord
-from tarot import ReadingType, Decks
-from handler import handle
+from tarot import ReadingType, Decks, MajorMinor
+from handler import handle, READING_DEFAULTS
+import shelve
 
 class ReadingButton(discord.ui.Button):
     def __init__(self, reading_type: ReadingType):
@@ -20,38 +21,128 @@ class ReadingSelectorView(discord.ui.View):
         for t in ReadingType:
             self.add_item(ReadingButton(t))
 
+class DeckSelector(discord.ui.Select):
+    def __init__(self, userid: str, userdata):
+        options = [
+            discord.SelectOption(
+                label=deck.label,
+                value=deck.shortname,
+                description=deck.longname,
+                default=userdata["deck"] == deck
+            ) for deck in Decks
+        ]
+        super().__init__(
+            placeholder = "Deck Type",
+            min_values = 1,
+            max_values = 1,
+            options = options,
+        )
+        self.userid = userid
 
-# def createOptions(prefix="", noinvert = False, nomajor = False, nominor = False, notext = False,
-#                   noimage = False, noembed = False, private = False):
-#     return ActionRow(components = [SelectMenu(
-#         options=[# the options in your dropdown
-#             SelectOption(label="No Text", value="text", description="Do not show card descriptions", default=notext),
-#             SelectOption(label="No Images", value="image", description="Do not show card images", default=noimage),
-#             SelectOption(label="No Embed", value="embed", description="Send unembedded message", default=noembed),
-#             SelectOption(label="No Inversions", value="invert", description="Only draw upright cards", default=noinvert),
-#             SelectOption(label="No Major Arcana", value="major", description="Only draw minor arcana cards", default=nomajor),
-#             SelectOption(label="No Minor Arcana", value="minor", description="Only draw major arcana cards", default=nominor),
-#             SelectOption(label="Private Reading", value="private", description="Send reading privately", default=private)
-#         ],
-#         placeholder="Reading Settings",  # the placeholder text to show when no options have been chosen
-#         min_values=0,  # the minimum number of options a user must select
-#         max_values=7,  # the maximum number of options a user can select
-#         custom_id="_tarotoptions"
-#     )])
+    async def callback(self, interaction: discord.Interaction):
+        with shelve.open("backup", writeback=True) as store:
+            store[self.userid]["deck"] = Decks(self.values[0])
+        await interaction.response.send_message("New settings have been saved", ephemeral=True, delete_after=2.0)
 
-# def createCardSelector(prefix="", selected=Decks.DEFAULT):
-#     return ActionRow(
-#         SelectMenu(
-#             options=[
-#                 create_select_option("Default", value="default", description="Default cards", default=(selected==Decks.DEFAULT)),
-#                 create_select_option("Swiss", value="swiss", description="IJJ Swiss cards", default=(selected==Decks.SWISS))
-#             ],
-#             placeholder="Card Type",
-#             min_values=1,
-#             max_values=1,
-#             custom_id=prefix+"_cardtype"
-#         )
-#     )
+class ReadingSelector(discord.ui.Select):
+    def __init__(self, userid: str, userdata):
+        options = [
+            discord.SelectOption(
+                label="Show Text",
+                value="text",
+                description="Show card descriptions",
+                default=userdata["text"]
+            ),
+            discord.SelectOption(
+                label="Show Images",
+                value="images",
+                description="Show card images",
+                default=userdata["image"]
+            ),
+            discord.SelectOption(
+                label="Use Embed",
+                value="embed",
+                description="Display the reading in a nice embed",
+                default=userdata["embed"]
+            ),
+            discord.SelectOption(
+                label="Allow Inversions",
+                value="invert",
+                description="Allow both upright and inverted cards",
+                default=userdata["invert"]
+            ),
+            discord.SelectOption(
+                label="Private Reading",
+                value="private",
+                description="Recieve the reading privately",
+                default=userdata["private"]
+            )
+        ]
+        super().__init__(
+            placeholder = "Reading Settings",
+            min_values = 0,
+            max_values = len(options),
+            options = options,
+        )
+        self.userid = userid
+
+    async def callback(self, interaction: discord.Interaction):
+        with shelve.open("backup", writeback=True) as store:
+            store[self.userid]["text"] = "text" in self.values
+            store[self.userid]["images"] = "images" in self.values
+            store[self.userid]["embed"] = "embed" in self.values
+            store[self.userid]["invert"] = "invert" in self.values
+            store[self.userid]["private"] = "private" in self.values
+        await interaction.response.send_message("New settings have been saved", ephemeral=True, delete_after=2.0)
+
+
+class ArcanaSelector(discord.ui.Select):
+    def __init__(self, userid: str, userdata):
+        options = [
+            discord.SelectOption(
+                label="Major Only",
+                value="major",
+                description="Only include major arcana cards",
+                default=userdata["majorminor"] == MajorMinor.MAJOR_ONLY
+            ),
+            discord.SelectOption(
+                label="Minor Only",
+                value="minor",
+                description="Only include minor arcana cards",
+                default=userdata["majorminor"] == MajorMinor.MINOR_ONLY
+            ),
+            discord.SelectOption(
+                label="Both Major and Minor",
+                value="both",
+                description="Include both major and minor arcana cards",
+                default=userdata["majorminor"] == MajorMinor.BOTH
+            )
+        ]
+        super().__init__(
+            placeholder = "Major or Minor Arcana",
+            min_values = 1,
+            max_values = 1,
+            options = options,
+        )
+        self.userid = userid
+
+    async def callback(self, interaction: discord.Interaction):
+        with shelve.open("backup", writeback=True) as store:
+            store[self.userid]["majorminor"] = MajorMinor(self.values[0])
+        await interaction.response.send_message("New settings have been saved", ephemeral=True, delete_after=2.0)
+
+class SettingsView(discord.ui.View):
+    def __init__(self, userid: str):
+        super().__init__()
+        with shelve.open("backup") as store:
+            if userid not in store:
+                store[userid] = READING_DEFAULTS
+            userdata = store[userid]
+        self.add_item(ReadingSelector(userid, userdata))
+        self.add_item(DeckSelector(userid, userdata))
+        self.add_item(ArcanaSelector(userid, userdata))
+
+
 class AboutView(discord.ui.View):
     def __init__(self):
         super().__init__(timeout=None)

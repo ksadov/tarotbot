@@ -3,7 +3,7 @@ import os
 from tarot import ReadingType
 from dotenv import load_dotenv
 import discord
-from components import ReadingSelectorView, AboutView
+from components import ReadingSelectorView, AboutView, SettingsView
 from handler import handle
 
 # TODO update this
@@ -22,7 +22,7 @@ else:
     application_id = os.getenv('DISCORD_APPLICATION_ID')
     guild_ids = None
 
-bot = discord.Bot(debug_guilds = guild_ids)
+bot = discord.Bot(debug_guilds = guild_ids, activity=discord.Game("/tarot for a reading"))
 
 @bot.event
 async def on_ready():
@@ -39,10 +39,7 @@ async def _tarot(ctx):
              description="Customize your tarot readings",
              guild_ids=guild_ids)
 async def _tarotsettings(ctx):
-    opts = READING_DEFAULTS
-    if ctx.user.id in store:
-        opts = store[ctx.user.id]
-    await ctx.respond("Customize your tarot readings", components=settings_components(opts), ephemeral=True)
+    await ctx.respond("Customize your tarot readings", view=SettingsView(str(ctx.interaction.user.id)), ephemeral=True)
 
 @bot.slash_command(name="tarothelp",
              description="Learn about the tarot bot",
@@ -63,5 +60,3 @@ for t in ReadingType:
     help_message += "/{}: {}\n".format(t.id, t.description)
 
 bot.run(token)
-
-# store.close()

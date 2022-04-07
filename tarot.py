@@ -1,10 +1,11 @@
 import random
 from PIL import Image, ImageDraw
 from typing import List
-from enum import Enum
+from enum import Enum, unique
 from os import path
 import layouts
 
+@unique
 class ReadingType(Enum):
     def __init__(self, fullname, id, numcards, description, imgfunc):
         self.fullname = fullname
@@ -17,9 +18,24 @@ class ReadingType(Enum):
     FIVE = ("Five cards", "5card", 5, "Five card tarot reading", layouts.draw5img)
     CELTIC = ("Celtic Cross", "celtic", 10, "Celtic cross tarot reading", layouts.celticimg)
 
+@unique
 class Decks(Enum):
-    DEFAULT = "default"
-    SWISS = "swiss"
+    def __new__(cls, shortname, label, longname):
+        obj = object.__new__(cls)
+        obj._value_ = shortname
+        obj.shortname = shortname
+        obj.label = label
+        obj.longname = longname
+        return obj
+
+    DEFAULT = ("default", "Default", "Default cards")
+    SWISS = ("swiss", "Swiss", "IJJ Swiss cards")
+
+@unique
+class MajorMinor(Enum):
+    MAJOR_ONLY = "major"
+    MINOR_ONLY = "minor"
+    BOTH = "both"
 
 class Card:
     """A class used to represent a tarot card.
@@ -63,7 +79,7 @@ class Card:
         else:
             return self.reverse
 
-def make_deck(major_only, minor_only) -> List[Card]:
+def make_deck(majorminor: MajorMinor) -> List[Card]:
     """Returns a full deck of tarot cards."""
     major = [
         Card("The World",
@@ -303,14 +319,14 @@ def make_deck(major_only, minor_only) -> List[Card]:
              "opportunity, prosperity, new venture",
              "lost opportunity, missed chance, bad investment", "AP")
         ]
-    if major_only:
+    if majorminor == MajorMinor.MAJOR_ONLY:
         return major
-    elif minor_only:
+    elif majorminor == MajorMinor.MINOR_ONLY:
         return minor
     else:
         return major + minor
 
-def draw(n: int, invert=True, major_only=False, minor_only=False) -> List[Card]:
+def draw(n: int, invert=True, majorminor: MajorMinor = MajorMinor.BOTH) -> List[Card]:
     """Returns a list of n random cards from a full deck of cards.
 
         Args:
@@ -321,7 +337,7 @@ def draw(n: int, invert=True, major_only=False, minor_only=False) -> List[Card]:
             minor_only: If True, only minor arcana cards will be drawn
 
     """
-    deck = make_deck(major_only, minor_only)
+    deck = make_deck(majorminor)
     hand = []
     for i in range(n):
         mycard = deck[random.randrange(len(deck))]
@@ -339,7 +355,7 @@ def makeImgList (cards: List[Card], deck: Decks):
     """Returns a list of Images corresponding to cards."""
     imgarray = []
     for c in cards:
-        newcard = Image.open(path.join("decks",deck.value,c.code + ".jpg")).convert("RGBA")
+        newcard = Image.open(path.join("decks",deck.shortname,c.code + ".jpg")).convert("RGBA")
         if not c.up:
             newcardrev = newcard.rotate(180, expand = 1)
             imgarray.append(newcardrev)
