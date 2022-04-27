@@ -21,9 +21,12 @@ READING_DEFAULTS = {
 
 async def handle(interaction: discord.Interaction, reading_type: ReadingType):
     opts = READING_DEFAULTS
+    gid = str(interaction.guild_id)
+    uid = str(interaction.user.id)
     with shelve.open("backup", 'r') as store:
-        if str(interaction.user.id) in store:
-            opts = store[str(interaction.user.id)]
+        # if str(interaction.user.id) in store:
+        if gid in store and uid in store[gid]["users"]:
+            opts = store[gid]["users"][uid]
     cards = tarot.draw(reading_type.num, opts["invert"], opts["majorminor"])
     response = tarot.cardtxt(cards)
     who = "<@{}>, here is your reading\n".format(interaction.user.id)

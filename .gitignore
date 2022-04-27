@@ -7,3 +7,4 @@ __pycache__
 .envrc
 backup.db
 backup
+*~

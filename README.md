@@ -17,16 +17,19 @@ You can add this bot to your servers with
 
 This bot now uses slash commands!
 
-Type `/tarot` to invoke a UI for doing a reading. Choose all of your settings
-and then press a button for the type of reading you want.
+Type `/tarot` to invoke a UI for doing a reading. Press a button for the type of reading you want.
+
+Type `/tarotsettings` to invoke a UI for specifying settings for your readings. These are saved.
 
 Type `/tarothelp` for information about the bot.
 
-`/1card` gives a 1 card reading with default settings
+`/1card` gives a 1 card reading
 
-`/3card` gives a 3 card reading with default settings
+`/3card` gives a 3 card reading
 
-`/5card` gives a 5 card reading with default settings
+`/5card` gives a 5 card reading
+
+`/celtic` gives a celtic cross reading
 
 ## Known issues
 

@@ -31,6 +31,10 @@ class Decks(Enum):
     DEFAULT = ("default", "Default", "Default cards")
     SWISS = ("swiss", "Swiss", "IJJ Swiss cards")
 
+    @classmethod
+    def global_decks(cls):
+        return [cls.DEFAULT, cls.SWISS]
+
 @unique
 class MajorMinor(Enum):
     MAJOR_ONLY = "major"

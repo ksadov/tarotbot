@@ -9,7 +9,8 @@ from handler import handle
 # TODO update this
 help_message = """For support or to request new features, join our discord server.
 /tarot: start a reading
-/tarothelp: view this help
+/tarotsettings: customize your readings
+/tarothelp: view this help\n
 """
 
 load_dotenv()
@@ -39,7 +40,7 @@ async def _tarot(ctx):
              description="Customize your tarot readings",
              guild_ids=guild_ids)
 async def _tarotsettings(ctx):
-    await ctx.respond("Customize your tarot readings", view=SettingsView(str(ctx.interaction.user.id)), ephemeral=True)
+    await ctx.respond("Customize your tarot readings", view=SettingsView(str(ctx.interaction.guild_id), str(ctx.interaction.user.id)), ephemeral=True)
 
 @bot.slash_command(name="tarothelp",
              description="Learn about the tarot bot",

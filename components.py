@@ -22,14 +22,14 @@ class ReadingSelectorView(discord.ui.View):
             self.add_item(ReadingButton(t))
 
 class DeckSelector(discord.ui.Select):
-    def __init__(self, userid: str, userdata):
+    def __init__(self, guildid: str, userid: str, userdata, guilddecks):
         options = [
             discord.SelectOption(
                 label=deck.label,
                 value=deck.shortname,
                 description=deck.longname,
                 default=userdata["deck"] == deck
-            ) for deck in Decks
+            ) for deck in guilddecks
         ]
         super().__init__(
             placeholder = "Deck Type",
@@ -38,14 +38,15 @@ class DeckSelector(discord.ui.Select):
             options = options,
         )
         self.userid = userid
+        self.guildid = guildid
 
     async def callback(self, interaction: discord.Interaction):
         with shelve.open("backup", writeback=True) as store:
-            store[self.userid]["deck"] = Decks(self.values[0])
+            store[self.guildid]["users"][self.userid]["deck"] = Decks(self.values[0])
         await interaction.response.send_message("New settings have been saved", ephemeral=True, delete_after=2.0)
 
 class ReadingSelector(discord.ui.Select):
-    def __init__(self, userid: str, userdata):
+    def __init__(self, guildid: str, userid: str, userdata):
         options = [
             discord.SelectOption(
                 label="Show Text",
@@ -85,19 +86,20 @@ class ReadingSelector(discord.ui.Select):
             options = options,
         )
         self.userid = userid
+        self.guildid = guildid
 
     async def callback(self, interaction: discord.Interaction):
         with shelve.open("backup", writeback=True) as store:
-            store[self.userid]["text"] = "text" in self.values
-            store[self.userid]["images"] = "images" in self.values
-            store[self.userid]["embed"] = "embed" in self.values
-            store[self.userid]["invert"] = "invert" in self.values
-            store[self.userid]["private"] = "private" in self.values
+            store[self.guildid]["users"][self.userid]["text"] = "text" in self.values
+            store[self.guildid]["users"][self.userid]["images"] = "images" in self.values
+            store[self.guildid]["users"][self.userid]["embed"] = "embed" in self.values
+            store[self.guildid]["users"][self.userid]["invert"] = "invert" in self.values
+            store[self.guildid]["users"][self.userid]["private"] = "private" in self.values
         await interaction.response.send_message("New settings have been saved", ephemeral=True, delete_after=2.0)
 
 
 class ArcanaSelector(discord.ui.Select):
-    def __init__(self, userid: str, userdata):
+    def __init__(self, guildid: str, userid: str, userdata):
         options = [
             discord.SelectOption(
                 label="Major Only",
@@ -125,22 +127,26 @@ class ArcanaSelector(discord.ui.Select):
             options = options,
         )
         self.userid = userid
+        self.guildid = guildid
 
     async def callback(self, interaction: discord.Interaction):
         with shelve.open("backup", writeback=True) as store:
-            store[self.userid]["majorminor"] = MajorMinor(self.values[0])
+            store[self.guildid]["users"][self.userid]["majorminor"] = MajorMinor(self.values[0])
         await interaction.response.send_message("New settings have been saved", ephemeral=True, delete_after=2.0)
 
 class SettingsView(discord.ui.View):
-    def __init__(self, userid: str):
+    def __init__(self, guildid: str, userid: str):
         super().__init__()
-        with shelve.open("backup") as store:
-            if userid not in store:
-                store[userid] = READING_DEFAULTS
-            userdata = store[userid]
-        self.add_item(ReadingSelector(userid, userdata))
-        self.add_item(DeckSelector(userid, userdata))
-        self.add_item(ArcanaSelector(userid, userdata))
+        with shelve.open("backup", writeback=True) as store:
+            if guildid not in store:
+                store[guildid] = {"users": {}, "decks": Decks.global_decks()}
+            if userid not in store[guildid]["users"]:
+                store[guildid]["users"][userid] = READING_DEFAULTS
+            userdata = store[guildid]["users"][userid]
+            guilddecks = store[guildid]["decks"]
+        self.add_item(ReadingSelector(guildid, userid, userdata))
+        self.add_item(DeckSelector(guildid, userid, userdata, guilddecks))
+        self.add_item(ArcanaSelector(guildid, userid, userdata))
 
 
 class AboutView(discord.ui.View):
