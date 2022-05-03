@@ -2,11 +2,7 @@ import discord
 from io import BytesIO
 import tarot
 from tarot import ReadingType, Decks, MajorMinor
-# import pysos
 import shelve
-
-# store = pysos.Dict('backup')
-# probably a good idea to create the store if it doesn't exist
 
 color = discord.Colour(0x6b1bf8)
 READING_DEFAULTS = {
@@ -24,7 +20,6 @@ async def handle(interaction: discord.Interaction, reading_type: ReadingType):
     gid = str(interaction.guild_id)
     uid = str(interaction.user.id)
     with shelve.open("backup", 'r') as store:
-        # if str(interaction.user.id) in store:
         if gid in store and uid in store[gid]["users"]:
             opts = store[gid]["users"][uid]
     cards = tarot.draw(reading_type.num, opts["invert"], opts["majorminor"])

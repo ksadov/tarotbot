@@ -2,6 +2,7 @@ import discord
 from tarot import ReadingType, Decks, MajorMinor
 from handler import handle, READING_DEFAULTS
 import shelve
+from itertools import chain
 
 class ReadingButton(discord.ui.Button):
     def __init__(self, reading_type: ReadingType):
@@ -29,7 +30,7 @@ class DeckSelector(discord.ui.Select):
                 value=deck.shortname,
                 description=deck.longname,
                 default=userdata["deck"] == deck
-            ) for deck in guilddecks
+            ) for deck in chain(guilddecks, Decks.global_decks)
         ]
         super().__init__(
             placeholder = "Deck Type",
@@ -139,11 +140,11 @@ class SettingsView(discord.ui.View):
         super().__init__()
         with shelve.open("backup", writeback=True) as store:
             if guildid not in store:
-                store[guildid] = {"users": {}, "decks": Decks.global_decks()}
+                store[guildid] = {"users": {}, "custom_decks": []}
             if userid not in store[guildid]["users"]:
                 store[guildid]["users"][userid] = READING_DEFAULTS
             userdata = store[guildid]["users"][userid]
-            guilddecks = store[guildid]["decks"]
+            guilddecks = store[guildid]["custom_decks"]
         self.add_item(ReadingSelector(guildid, userid, userdata))
         self.add_item(DeckSelector(guildid, userid, userdata, guilddecks))
         self.add_item(ArcanaSelector(guildid, userid, userdata))

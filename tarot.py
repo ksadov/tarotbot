@@ -20,20 +20,19 @@ class ReadingType(Enum):
 
 @unique
 class Decks(Enum):
-    def __new__(cls, shortname, label, longname):
+    def __new__(cls, shortname, label, longname, global_d = True):
         obj = object.__new__(cls)
         obj._value_ = shortname
         obj.shortname = shortname
         obj.label = label
         obj.longname = longname
+        if global_d:
+            cls.global_decks = cls.__dict__.get('global_decks', [])
+            cls.global_decks.append(obj)
         return obj
 
     DEFAULT = ("default", "Default", "Default cards")
     SWISS = ("swiss", "Swiss", "IJJ Swiss cards")
-
-    @classmethod
-    def global_decks(cls):
-        return [cls.DEFAULT, cls.SWISS]
 
 @unique
 class MajorMinor(Enum):
