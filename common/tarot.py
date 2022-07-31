@@ -359,7 +359,7 @@ def makeImgList (cards: List[Card], deck: Decks):
     """Returns a list of Images corresponding to cards."""
     imgarray = []
     for c in cards:
-        newcard = Image.open(path.join("..","decks",deck.shortname,c.code + ".jpg")).convert("RGBA")
+        newcard = Image.open(path.join(path.dirname(__file__),"..","decks",deck.shortname,c.code + ".jpg")).convert("RGBA")
         if not c.up:
             newcardrev = newcard.rotate(180, expand = 1)
             imgarray.append(newcardrev)

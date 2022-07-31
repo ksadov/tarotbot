@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 import discord
 from discordbot.components import ReadingSelectorView, AboutView, SettingsView
 from discordbot.handler import handle
+import discordbot.makeBackupFile
 
 # TODO update this
 help_message = """For support or to request new features, join our discord server.

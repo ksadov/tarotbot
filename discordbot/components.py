@@ -3,6 +3,9 @@ from common.tarot import ReadingType, Decks, MajorMinor
 from discordbot.handler import handle, READING_DEFAULTS
 import shelve
 from itertools import chain
+import os
+
+backup = os.path.join(os.path.dirname(__file__), 'backup')
 
 class ReadingButton(discord.ui.Button):
     def __init__(self, reading_type: ReadingType):
@@ -42,7 +45,7 @@ class DeckSelector(discord.ui.Select):
         self.guildid = guildid
 
     async def callback(self, interaction: discord.Interaction):
-        with shelve.open("backup", writeback=True) as store:
+        with shelve.open(backup, writeback=True) as store:
             store[self.guildid]["users"][self.userid]["deck"] = Decks(self.values[0])
         await interaction.response.send_message("New settings have been saved", ephemeral=True, delete_after=2.0)
 
@@ -90,7 +93,7 @@ class ReadingSelector(discord.ui.Select):
         self.guildid = guildid
 
     async def callback(self, interaction: discord.Interaction):
-        with shelve.open("backup", writeback=True) as store:
+        with shelve.open(backup, writeback=True) as store:
             store[self.guildid]["users"][self.userid]["text"] = "text" in self.values
             store[self.guildid]["users"][self.userid]["images"] = "images" in self.values
             store[self.guildid]["users"][self.userid]["embed"] = "embed" in self.values
@@ -131,14 +134,14 @@ class ArcanaSelector(discord.ui.Select):
         self.guildid = guildid
 
     async def callback(self, interaction: discord.Interaction):
-        with shelve.open("backup", writeback=True) as store:
+        with shelve.open(backup, writeback=True) as store:
             store[self.guildid]["users"][self.userid]["majorminor"] = MajorMinor(self.values[0])
         await interaction.response.send_message("New settings have been saved", ephemeral=True, delete_after=2.0)
 
 class SettingsView(discord.ui.View):
     def __init__(self, guildid: str, userid: str):
         super().__init__()
-        with shelve.open("backup", writeback=True) as store:
+        with shelve.open(backup, writeback=True) as store:
             if guildid not in store:
                 store[guildid] = {"users": {}, "custom_decks": []}
             if userid not in store[guildid]["users"]:

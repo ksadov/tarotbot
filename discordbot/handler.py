@@ -3,7 +3,10 @@ from io import BytesIO
 from common import tarot
 from common.tarot import ReadingType, Decks, MajorMinor
 import shelve
+import os
 
+
+backup = os.path.join(os.path.dirname(__file__), 'backup')
 color = discord.Colour(0x6b1bf8)
 READING_DEFAULTS = {
     "deck": Decks.DEFAULT,
@@ -19,7 +22,7 @@ async def handle(interaction: discord.Interaction, reading_type: ReadingType):
     opts = READING_DEFAULTS
     gid = str(interaction.guild_id)
     uid = str(interaction.user.id)
-    with shelve.open("backup", 'r') as store:
+    with shelve.open(backup, 'r') as store:
         if gid in store and uid in store[gid]["users"]:
             opts = store[gid]["users"][uid]
     cards = tarot.draw(reading_type.num, opts["invert"], opts["majorminor"])

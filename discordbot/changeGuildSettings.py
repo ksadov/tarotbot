@@ -1,9 +1,12 @@
 import shelve
 from common.tarot import Decks
+import os
+
+backup = os.path.join(os.path.dirname(__file__), 'backup')
 
 # add non-standard deck to the guilds
 def addCustomDeck(guildid, deck):
-    with shelve.open("backup", writeback=True) as store:
+    with shelve.open(backup, writeback=True) as store:
         if guildid not in store:
             store[guildid] = {"users": {}, "custom_decks": []}
         store[guildid]["custom_decks"].append(deck)
