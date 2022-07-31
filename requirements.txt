@@ -22,7 +22,7 @@ multidict==6.0.2
 orjson==3.6.8
 Pillow==9.1.0
 py-cord==2.0.0b7
-pycares==4.1.2
+pycares==4.2.0
 pycparser==2.21
 python-dotenv==0.20.0
 python-telegram-bot==20.0a1
