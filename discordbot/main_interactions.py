@@ -1,8 +1,8 @@
 import interactions
 from interactions import Embed, EmbedField, EmbedImageStruct, Attachment
 import os
-import tarot
-from tarot import ReadingType, Decks
+from ..common import tarot
+from ..common.tarot import ReadingType, Decks
 from dotenv import load_dotenv
 from io import BytesIO
 from components import createComponents, default_components, about_components, settings_components, start_reading_components

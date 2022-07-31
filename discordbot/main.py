@@ -1,6 +1,6 @@
 # attempting to switch to pycord because interactions has annoyed me
 import os
-from tarot import ReadingType
+from ..common.tarot import ReadingType
 from dotenv import load_dotenv
 import discord
 from components import ReadingSelectorView, AboutView, SettingsView
@@ -60,4 +60,8 @@ for t in ReadingType:
     addCommand(t)
     help_message += "/{}: {}\n".format(t.id, t.description)
 
-bot.run(token)
+def main():
+    bot.run(token)
+
+if __name__ == '__main__':
+    main()

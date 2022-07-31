@@ -33,6 +33,7 @@ class Decks(Enum):
 
     DEFAULT = ("default", "Default", "Default cards")
     SWISS = ("swiss", "Swiss", "IJJ Swiss cards")
+    PLANET_SCUM = ("planetscum", "Planet Scum", "Planet Scum Custom Cards", False)
 
 @unique
 class MajorMinor(Enum):
@@ -358,7 +359,7 @@ def makeImgList (cards: List[Card], deck: Decks):
     """Returns a list of Images corresponding to cards."""
     imgarray = []
     for c in cards:
-        newcard = Image.open(path.join("decks",deck.shortname,c.code + ".jpg")).convert("RGBA")
+        newcard = Image.open(path.join("..","decks",deck.shortname,c.code + ".jpg")).convert("RGBA")
         if not c.up:
             newcardrev = newcard.rotate(180, expand = 1)
             imgarray.append(newcardrev)

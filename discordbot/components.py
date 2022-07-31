@@ -1,5 +1,5 @@
 import discord
-from tarot import ReadingType, Decks, MajorMinor
+from ..common.tarot import ReadingType, Decks, MajorMinor
 from handler import handle, READING_DEFAULTS
 import shelve
 from itertools import chain

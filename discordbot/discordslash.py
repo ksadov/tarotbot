@@ -1,6 +1,6 @@
 import os
-import tarot
-from tarot import ReadingType, Decks
+from ..common import tarot
+from ..common.tarot import ReadingType, Decks
 import discord
 from dotenv import load_dotenv
 from io import BytesIO
