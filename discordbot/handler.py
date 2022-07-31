@@ -1,7 +1,7 @@
 import discord
 from io import BytesIO
-from ..common import tarot
-from ..common.tarot import ReadingType, Decks, MajorMinor
+from common import tarot
+from common.tarot import ReadingType, Decks, MajorMinor
 import shelve
 
 color = discord.Colour(0x6b1bf8)

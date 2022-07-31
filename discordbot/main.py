@@ -1,10 +1,10 @@
 # attempting to switch to pycord because interactions has annoyed me
 import os
-from ..common.tarot import ReadingType
+from common.tarot import ReadingType
 from dotenv import load_dotenv
 import discord
-from components import ReadingSelectorView, AboutView, SettingsView
-from handler import handle
+from discordbot.components import ReadingSelectorView, AboutView, SettingsView
+from discordbot.handler import handle
 
 # TODO update this
 help_message = """For support or to request new features, join our discord server.

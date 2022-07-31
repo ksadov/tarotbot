@@ -1,5 +1,5 @@
 import shelve
-from ..common.tarot import Decks
+from common.tarot import Decks
 
 # add non-standard deck to the guilds
 def addCustomDeck(guildid, deck):

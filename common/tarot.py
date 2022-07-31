@@ -3,7 +3,7 @@ from PIL import Image, ImageDraw
 from typing import List
 from enum import Enum, unique
 from os import path
-import layouts
+from . import layouts
 
 @unique
 class ReadingType(Enum):
