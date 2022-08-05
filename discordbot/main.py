@@ -15,7 +15,7 @@ help_message = """For support or to request new features, join our discord serve
 """
 
 load_dotenv()
-if os.getenv("TAROT_DEVELOPMENT"):
+if os.getenv("TAROT_DEVELOPMENT") == "true":
     token = os.getenv('TEST_TOKEN')
     application_id = os.getenv('TEST_APPLICATION_ID')
     guild_ids = [357633267861553162, 410850945229127692]
