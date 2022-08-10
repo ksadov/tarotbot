@@ -24,7 +24,7 @@ else:
     application_id = os.getenv('DISCORD_APPLICATION_ID')
     guild_ids = None
 
-bot = discord.Bot(debug_guilds = guild_ids, activity=discord.Game("/tarot for a reading"))
+bot = discord.AutoShardedBot(debug_guilds = guild_ids, activity=discord.Game("/tarot for a reading"))
 
 @bot.event
 async def on_ready():
