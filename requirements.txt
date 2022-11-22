@@ -20,7 +20,7 @@ httpx==0.23.0
 idna==3.3
 multidict==6.0.2
 orjson==3.6.8
-Pillow==9.1.0
+Pillow==9.3.0
 py-cord==2.0.0b7
 pycares==4.1.2
 pycparser==2.21
