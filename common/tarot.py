@@ -345,7 +345,7 @@ def draw(n: int, invert=True, majorminor: MajorMinor = MajorMinor.BOTH) -> List[
     hand = []
     for i in range(n):
         mycard = deck[random.randrange(len(deck))]
-        if invert and (random.randrange(5) == 0):
+        if invert and (random.randrange(2) == 0):
             mycard.up = False
         deck.remove(mycard)
         hand.append(mycard)
