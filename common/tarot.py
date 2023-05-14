@@ -335,7 +335,7 @@ def draw(n: int, invert=True, majorminor: MajorMinor = MajorMinor.BOTH) -> List[
 
         Args:
             n: the number of cards to draw
-            invert: If True, cards have a 1/5 chance of being inverted.
+            invert: If True, cards have a 1/2 chance of being inverted.
                     Otherwise, no cards will be inverted.
             major_only: If True, only major arcana cards will be drawn
             minor_only: If True, only minor arcana cards will be drawn
