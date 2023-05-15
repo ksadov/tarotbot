@@ -46,9 +46,15 @@ async def handle_generic(ctx, numcards, imgfunc, should_inline, reading_type_nam
                               color=color)
 
         if opts["text"]:
-            for i, (n,v) in enumerate(response):
-                embed.add_field(name='{}) {}'.format(i+1,n), value=v,
-                                    inline=should_inline)
+            if numcards > 25:
+                msg = ""
+                for i, (n,v) in enumerate(response):
+                    msg += f"{i + 1}) " + n + "\n"
+                embed.description = msg
+            else:
+                for i, (n,v) in enumerate(response):
+                    embed.add_field(name='{}) {}'.format(i+1,n), value=v,
+                                        inline=should_inline)
         if opts["image"]:
             embed.set_image(url="attachment://image.png")
     else:
