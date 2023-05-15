@@ -111,12 +111,15 @@ def genericimg (cards, cardwidth: int, cardheight: int) -> Image:
     cols = ceil(len(cards) / rows)
     total_width = (cols*(cardwidth + image_border) - image_border)
     total_height = (rows*(cardheight + image_border) - image_border)
-    
+
     img = Image.new('RGBA', (total_width, total_height), (255, 0, 0, 0))
+    lastrow_length = len(cards) - (rows - 1)*cols
+    lastrow_width = lastrow_length * cardwidth + (lastrow_length - 2)*image_border
     for i in range(0, rows):
+        offset = round((total_width - lastrow_width - image_border) / 2) if i==rows-1 else 0
         for j in range(0, cols):
             cardnum = i*cols + j
             if cardnum >= len(cards):
                 break
-            img.paste(cards[i*cols + j], (j*(image_border + cardwidth), i*(image_border + cardheight)))
+            img.paste(cards[i*cols + j], (j*(image_border + cardwidth) + offset, i*(image_border + cardheight)))
     return img
