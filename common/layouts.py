@@ -106,10 +106,12 @@ def genericimg (cards, cardwidth: int, cardheight: int) -> Image:
 
     """
     image_border = 20
-    cols = ceil(sqrt(len(cards)))
-    rows = ceil(len(cards) / cols)
-    total_width = (cols*(cardwidth + 2*image_border))
-    total_height = (rows*(cardheight + 2*image_border))
+    ratio = (9*cardwidth + 2*image_border) / (16*cardheight + 2*image_border)
+    rows = ceil(sqrt(len(cards)*ratio))
+    cols = ceil(len(cards) / rows)
+    total_width = (cols*(cardwidth + image_border) - image_border)
+    total_height = (rows*(cardheight + image_border) - image_border)
+    
     img = Image.new('RGBA', (total_width, total_height), (255, 0, 0, 0))
     for i in range(0, rows):
         for j in range(0, cols):
