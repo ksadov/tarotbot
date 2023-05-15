@@ -31,6 +31,8 @@ Type `/tarothelp` for information about the bot.
 
 `/celtic` gives a celtic cross reading
 
+`/pull x` gives an x card reading
+
 ## Known issues
 
 - private readings are missing images
