@@ -1,3 +1,4 @@
+from math import ceil, sqrt
 from PIL import Image, ImageDraw
 
 def draw1img (cards, cardwidth: int, cardheight: int) -> Image:
@@ -93,4 +94,27 @@ def celticimg (cards, cardwidth: int, cardheight: int) -> Image:
     img.paste(cards[9], (column4, row1))
     card2 = cards[1].rotate(90, expand = 1)
     img.paste(card2, (column1_5, row2_5 + 2*image_border))
+    return img
+
+def genericimg (cards, cardwidth: int, cardheight: int) -> Image:
+    """Returns an Image representing a 5-card spread.
+
+        Args:
+            cards (List[Image]): list containing the cards in the spread
+            cardwidth: the width of the card image
+            cardheight: the height of the card image
+
+    """
+    image_border = 20
+    cols = ceil(sqrt(len(cards)))
+    rows = ceil(len(cards) / cols)
+    total_width = (cols*(cardwidth + 2*image_border))
+    total_height = (rows*(cardheight + 2*image_border))
+    img = Image.new('RGBA', (total_width, total_height), (255, 0, 0, 0))
+    for i in range(0, rows):
+        for j in range(0, cols):
+            cardnum = i*cols + j
+            if cardnum >= len(cards):
+                break
+            img.paste(cards[i*cols + j], (j*(image_border + cardwidth), i*(image_border + cardheight)))
     return img
