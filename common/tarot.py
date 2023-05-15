@@ -342,6 +342,9 @@ def draw(n: int, invert=True, majorminor: MajorMinor = MajorMinor.BOTH) -> List[
 
     """
     deck = make_deck(majorminor)
+    if n < 1 or n > len(deck):
+        raise ValueError(f"Number of cards must be between 1 and {len(deck)}")
+
     hand = []
     for i in range(n):
         mycard = deck[random.randrange(len(deck))]

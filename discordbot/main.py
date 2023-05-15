@@ -1,10 +1,12 @@
 # attempting to switch to pycord because interactions has annoyed me
+from math import ceil
 import os
+from common import layouts
 from common.tarot import ReadingType
 from dotenv import load_dotenv
 import discord
 from discordbot.components import ReadingSelectorView, AboutView, SettingsView
-from discordbot.handler import handle
+from discordbot.handler import handle, handle_generic
 import discordbot.makeBackupFile
 
 # TODO update this
@@ -48,14 +50,25 @@ async def _tarotsettings(ctx):
              guild_ids=guild_ids)
 async def _about(ctx):
     await ctx.respond(help_message, view=AboutView(), ephemeral=True)
-
+    
+    
+@bot.slash_command(name="pull",
+             description="Pull cards from the deck",
+             guild_ids=guild_ids)
+@discord.option("numcards", description="Number of cards to draw", required=True)
+async def _pull(ctx, numcards: int):
+    for i in range(0, nummsg):
+        try:
+            await handle_generic(ctx, numcards, layouts.genericimg, False, "Pull")
+        except Exception as e:
+            await ctx.followup.send(e, ephemeral=True)
 
 def addCommand(t):
     @bot.slash_command(name=t.id,
                  description=t.description,
                  guild_ids=guild_ids)
     async def _do_reading(ctx):
-        await handle(ctx.interaction, t)
+        await handle(ctx, t)
 
 for t in ReadingType:
     addCommand(t)

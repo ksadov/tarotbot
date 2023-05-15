@@ -18,7 +18,9 @@ READING_DEFAULTS = {
     "invert": True,
 }
 
-async def handle_generic(interaction: discord.Interaction, numcards, imgfunc, should_inline, reading_type_name):
+async def handle_generic(ctx, numcards, imgfunc, should_inline, reading_type_name):
+    await ctx.defer()
+    interaction = ctx.interaction
     opts = READING_DEFAULTS
     gid = str(interaction.guild_id)
     uid = str(interaction.user.id)
@@ -54,10 +56,10 @@ async def handle_generic(interaction: discord.Interaction, numcards, imgfunc, sh
             for i, (n,v) in enumerate(response):
                 message = (message + "\n**" + str(i+1) + ") " +
                                 n + "**\n" + v)
-    await interaction.response.send_message(content=message, file=file, embed=embed, ephemeral=opts["private"])
+    await ctx.followup.send(content=message, file=file, embed=embed, ephemeral=opts["private"])
 
-async def handle(interaction: discord.Interaction, reading_type: ReadingType):
-    await handle_generic(interaction, 
+async def handle(ctx, reading_type: ReadingType):
+    await handle_generic(ctx, 
                          reading_type.num, 
                          reading_type.imgfunc, 
                          reading_type in [ReadingType.ONE, ReadingType.THREE], 
