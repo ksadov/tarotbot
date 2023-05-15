@@ -18,33 +18,32 @@ READING_DEFAULTS = {
     "invert": True,
 }
 
-async def handle(interaction: discord.Interaction, reading_type: ReadingType):
+async def handle_generic(interaction: discord.Interaction, numcards, imgfunc, should_inline, reading_type_name):
     opts = READING_DEFAULTS
     gid = str(interaction.guild_id)
     uid = str(interaction.user.id)
     with shelve.open(backup, 'r') as store:
         if gid in store and uid in store[gid]["users"]:
             opts = store[gid]["users"][uid]
-    cards = tarot.draw(reading_type.num, opts["invert"], opts["majorminor"])
+    cards = tarot.draw(numcards, opts["invert"], opts["majorminor"])
     response = tarot.cardtxt(cards)
     who = "<@{}>, here is your reading\n".format(interaction.user.id)
     file = None
     embed = None
     message = who
     if opts["image"]:
-        im = tarot.cardimg(cards, opts["deck"], reading_type)
+        im = tarot.cardimg(cards, opts["deck"], imgfunc)
         with BytesIO() as buf:
             im.save(buf, "PNG")
             buf.seek(0)
             file = discord.File(fp=buf,filename="image.png")
 
     if opts["embed"]:
-        embed = discord.Embed(title="{} reading for {}".format(reading_type.fullname, interaction.user.display_name),
+        embed = discord.Embed(title="{} reading for {}".format(reading_type_name, interaction.user.display_name),
                               type="rich",
                               color=color)
 
         if opts["text"]:
-            should_inline = reading_type in [ReadingType.ONE, ReadingType.THREE]
             for i, (n,v) in enumerate(response):
                 embed.add_field(name='{}) {}'.format(i+1,n), value=v,
                                     inline=should_inline)
@@ -56,3 +55,10 @@ async def handle(interaction: discord.Interaction, reading_type: ReadingType):
                 message = (message + "\n**" + str(i+1) + ") " +
                                 n + "**\n" + v)
     await interaction.response.send_message(content=message, file=file, embed=embed, ephemeral=opts["private"])
+
+async def handle(interaction: discord.Interaction, reading_type: ReadingType):
+    await handle_generic(interaction, 
+                         reading_type.num, 
+                         reading_type.imgfunc, 
+                         reading_type in [ReadingType.ONE, ReadingType.THREE], 
+                         reading_type.fullname)

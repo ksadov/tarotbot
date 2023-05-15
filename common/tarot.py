@@ -369,7 +369,7 @@ def makeImgList (cards: List[Card], deck: Decks):
 
 
 
-def cardimg(cardsO: List[Card], deck: Decks, command: ReadingType) -> Image:
+def cardimg(cardsO: List[Card], deck: Decks, imgfunc) -> Image:
     """Returns an Image of the cards in cards0 in a spread specified by command.
 
         Args:
@@ -379,5 +379,5 @@ def cardimg(cardsO: List[Card], deck: Decks, command: ReadingType) -> Image:
     cards = makeImgList(cardsO, deck)
     cardwidth = max(map(lambda x: x.width, cards))
     cardheight = max(map(lambda x: x.height, cards))
-    img = command.imgfunc(cards, cardwidth, cardheight)
+    img = imgfunc(cards, cardwidth, cardheight)
     return img
