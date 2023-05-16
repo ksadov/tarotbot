@@ -107,7 +107,7 @@ def genericimg (cards, cardwidth: int, cardheight: int) -> Image:
     """
     image_border = 20
     ratio = (9*cardwidth + 2*image_border) / (16*cardheight + 2*image_border)
-    rows = ceil(sqrt(len(cards)*ratio))
+    rows = round(sqrt(len(cards)*ratio))
     cols = ceil(len(cards) / rows)
     total_width = (cols*(cardwidth + image_border) - image_border)
     total_height = (rows*(cardheight + image_border) - image_border)
