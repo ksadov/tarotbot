@@ -97,7 +97,7 @@ def celticimg (cards, cardwidth: int, cardheight: int) -> Image:
     return img
 
 def genericimg (cards, cardwidth: int, cardheight: int) -> Image:
-    """Returns an Image representing a 5-card spread.
+    """Returns an Image representing a spread for an arbitrary number of cards.
 
         Args:
             cards (List[Image]): list containing the cards in the spread
