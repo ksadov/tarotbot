@@ -1,6 +1,6 @@
 import discord
-from common.tarot import ReadingType, Decks, MajorMinor
-from discordbot.handler import handle, READING_DEFAULTS
+from common.tarot import READING_TYPE_ENUM, ReadingType, Decks, MajorMinor
+from discordbot.handler import READING_DEFAULTS, handle_interaction
 import shelve
 from itertools import chain
 import os
@@ -17,12 +17,12 @@ class ReadingButton(discord.ui.Button):
         self.reading_type = reading_type
 
     async def callback(self, interaction: discord.Interaction):
-        await handle(interaction, self.reading_type)
+        await handle_interaction(interaction, self.reading_type)
 
 class ReadingSelectorView(discord.ui.View):
     def __init__(self):
         super().__init__(timeout=None)
-        for t in ReadingType:
+        for t in READING_TYPE_ENUM:
             self.add_item(ReadingButton(t))
 
 class DeckSelector(discord.ui.Select):

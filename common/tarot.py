@@ -1,22 +1,39 @@
 import random
-from PIL import Image, ImageDraw
+from PIL import Image
 from typing import List
 from enum import Enum, unique
 from os import path
 from . import layouts
 
-@unique
-class ReadingType(Enum):
-    def __init__(self, fullname, id, numcards, description, imgfunc):
+class ReadingType():
+     def __init__(self, fullname: str, id: str, numcards: int, description: str, imgfunc):
         self.fullname = fullname
         self.id = id
         self.num = numcards
         self.description = description
         self.imgfunc = imgfunc
-    ONE = ("One card", "1card", 1, "One card tarot reading", layouts.draw1img)
-    THREE = ("Three cards", "3card", 3, "Three card tarot reading", layouts.draw3img)
-    FIVE = ("Five cards", "5card", 5, "Five card tarot reading", layouts.draw5img)
-    CELTIC = ("Celtic Cross", "celtic", 10, "Celtic cross tarot reading", layouts.celticimg)
+
+class OneCardR(ReadingType):
+     def __init__(self):
+          super().__init__("One card", "1card", 1, "One card tarot reading", layouts.draw1img)
+
+class ThreeCardR(ReadingType):
+     def __init__(self):
+          super().__init__("Three cards", "3card", 3, "Three card tarot reading", layouts.draw3img)
+
+class FiveCardR(ReadingType):
+     def __init__(self):
+          super().__init__("Five cards", "5card", 5, "Five card tarot reading", layouts.draw5img)
+
+class CelticR(ReadingType):
+     def __init__(self):
+          super().__init__("Celtic Cross", "celtic", 10, "Celtic cross tarot reading", layouts.celticimg)
+
+class NCardR(ReadingType):
+     def __init__(self, numCards):
+          super().__init__("{} cards".format(numCards), "ncard", numCards, "{} card tarot reading".format(numCards), layouts.genericimg)
+
+READING_TYPE_ENUM: list[ReadingType] = [OneCardR(), ThreeCardR(), FiveCardR(), CelticR()]
 
 @unique
 class Decks(Enum):
