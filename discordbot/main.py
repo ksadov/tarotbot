@@ -18,7 +18,7 @@ load_dotenv()
 if os.getenv("TAROT_DEVELOPMENT") == "true":
     token = os.getenv('TEST_TOKEN')
     application_id = os.getenv('TEST_APPLICATION_ID')
-    guild_ids = [357633267861553162, 410850945229127692]
+    guild_ids = [int(id) for id in os.getenv("GUILD_IDS").split(',')]
 else:
     token = os.getenv('DISCORD_TOKEN')
     application_id = os.getenv('DISCORD_APPLICATION_ID')
