@@ -40,6 +40,7 @@ class Decks(Enum):
     DEFAULT = ("default", "Default", "Default cards")
     SWISS = ("swiss", "Swiss", "IJJ Swiss cards")
     PLANET_SCUM = ("planetscum", "Planet Scum", "Planet Scum Custom Cards", False)
+    RIDER_WAITE_SMITH = ("rider-waite-smith", "Rider-Waite-Smith", "Rider-Waite-Smith cards")
 
 @unique
 class MajorMinor(Enum):
