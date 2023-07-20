@@ -4,36 +4,25 @@ from typing import List
 from enum import Enum, unique
 from os import path
 from . import layouts
+from dataclasses import dataclass, field
 
+@dataclass
 class ReadingType():
-     def __init__(self, fullname: str, id: str, numcards: int, description: str, imgfunc):
-        self.fullname = fullname
-        self.id = id
-        self.num = numcards
-        self.description = description
-        self.imgfunc = imgfunc
+     """Class for representing a type of tarot reading"""
+     fullname: str
+     id: str
+     numcards: int
+     description: str
+     imgfunc: layouts.imgfunc_type = field(repr=False, compare=False)
 
-class OneCardR(ReadingType):
-     def __init__(self):
-          super().__init__("One card", "1card", 1, "One card tarot reading", layouts.draw1img)
+OneCardR = ReadingType("One card", "1card", 1, "One card tarot reading", layouts.draw1img)
+ThreeCardR = ReadingType("Three cards", "3card", 3, "Three card tarot reading", layouts.draw3img)
+FiveCardR = ReadingType("Five cards", "5card", 5, "Five card tarot reading", layouts.draw5img)
+CelticR = ReadingType("Celtic Cross", "celtic", 10, "Celtic cross tarot reading", layouts.celticimg)
+def NCardR(numCards):
+     return ReadingType("{} cards".format(numCards), "ncard", numCards, "{} card tarot reading".format(numCards), layouts.genericimg)
 
-class ThreeCardR(ReadingType):
-     def __init__(self):
-          super().__init__("Three cards", "3card", 3, "Three card tarot reading", layouts.draw3img)
-
-class FiveCardR(ReadingType):
-     def __init__(self):
-          super().__init__("Five cards", "5card", 5, "Five card tarot reading", layouts.draw5img)
-
-class CelticR(ReadingType):
-     def __init__(self):
-          super().__init__("Celtic Cross", "celtic", 10, "Celtic cross tarot reading", layouts.celticimg)
-
-class NCardR(ReadingType):
-     def __init__(self, numCards):
-          super().__init__("{} cards".format(numCards), "ncard", numCards, "{} card tarot reading".format(numCards), layouts.genericimg)
-
-READING_TYPE_ENUM: list[ReadingType] = [OneCardR(), ThreeCardR(), FiveCardR(), CelticR()]
+SIMPLE_READINGS = [OneCardR, ThreeCardR, FiveCardR, CelticR]
 
 @unique
 class Decks(Enum):
@@ -389,11 +378,12 @@ def makeImgList (cards: List[Card], deck: Decks):
 
 
 
-def cardimg(cardsO: List[Card], deck: Decks, imgfunc) -> Image:
+def cardimg(cardsO: List[Card], deck: Decks, imgfunc: layouts.imgfunc_type) -> Image:
     """Returns an Image of the cards in cards0 in a spread specified by command.
 
         Args:
             cards0: the cards in the spread
+            deck: the deck (set of card images) to use
             command: the spread. Valid spreads are 1card, 3card, 5card, celtic
     """
     cards = makeImgList(cardsO, deck)

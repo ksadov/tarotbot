@@ -23,6 +23,7 @@ async def handle(ctx, read: ReadingType):
     message, file, embed, ephemeral = build_response(ctx.interaction, read)
     await ctx.followup.send(content=message, file=file, embed=embed, ephemeral=ephemeral)
 
+# needed for clicked componenets
 async def handle_interaction(interaction, read: ReadingType):
     message, file, embed, ephemeral = build_response(interaction, read)
     await interaction.response.send_message(content=message, file=file, embed=embed, ephemeral=ephemeral)
@@ -34,7 +35,7 @@ def build_response(interaction, read):
     with shelve.open(backup, 'r') as store:
         if gid in store and uid in store[gid]["users"]:
             opts = store[gid]["users"][uid]
-    cards = tarot.draw(read.num, opts["invert"], opts["majorminor"])
+    cards = tarot.draw(read.numcards, opts["invert"], opts["majorminor"])
     response = tarot.cardtxt(cards)
     who = "<@{}>, here is your reading\n".format(interaction.user.id)
     file = None
@@ -53,7 +54,7 @@ def build_response(interaction, read):
                               color=color)
 
         if opts["text"]:
-            if read.num > 25:
+            if read.numcards > 25:
                 msg = ""
                 for i, (n,v) in enumerate(response):
                     msg += f"{i + 1}) " + n + "\n"

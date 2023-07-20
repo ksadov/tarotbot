@@ -1,11 +1,11 @@
 # attempting to switch to pycord because interactions has annoyed me
 import os
 from common import layouts
-from common.tarot import READING_TYPE_ENUM, NCardR, ReadingType
+from common.tarot import SIMPLE_READINGS, NCardR, ReadingType
 from dotenv import load_dotenv
 import discord
 from discordbot.components import ReadingSelectorView, AboutView, SettingsView
-from discordbot.handler import handle, handle
+from discordbot.handler import handle
 
 # TODO update this
 help_message = """For support or to request new features, join our discord server.
@@ -18,7 +18,7 @@ load_dotenv()
 if os.getenv("TAROT_DEVELOPMENT") == "true":
     token = os.getenv('TEST_TOKEN')
     application_id = os.getenv('TEST_APPLICATION_ID')
-    guild_ids = [357633267861553162, 410850945229127692]
+    guild_ids = os.getenv('TESTING_GUILD_IDS').split(',')
 else:
     token = os.getenv('DISCORD_TOKEN')
     application_id = os.getenv('DISCORD_APPLICATION_ID')
@@ -67,7 +67,7 @@ def addCommand(t: ReadingType):
     async def _do_reading(ctx):
         await handle(ctx, t)
 
-for t in READING_TYPE_ENUM:
+for t in SIMPLE_READINGS:
     addCommand(t)
     help_message += "/{}: {}\n".format(t.id, t.description)
 

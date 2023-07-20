@@ -1,5 +1,5 @@
 import discord
-from common.tarot import READING_TYPE_ENUM, ReadingType, Decks, MajorMinor
+from common.tarot import SIMPLE_READINGS, ReadingType, Decks, MajorMinor
 from discordbot.handler import READING_DEFAULTS, handle_interaction
 import shelve
 from itertools import chain
@@ -22,7 +22,7 @@ class ReadingButton(discord.ui.Button):
 class ReadingSelectorView(discord.ui.View):
     def __init__(self):
         super().__init__(timeout=None)
-        for t in READING_TYPE_ENUM:
+        for t in SIMPLE_READINGS:
             self.add_item(ReadingButton(t))
 
 class DeckSelector(discord.ui.Select):
@@ -62,7 +62,7 @@ class ReadingSelector(discord.ui.Select):
                 label="Show Images",
                 value="images",
                 description="Show card images",
-                default=userdata["image"]
+                default=userdata["images"]
             ),
             discord.SelectOption(
                 label="Use Embed",
