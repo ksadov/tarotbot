@@ -8,3 +8,4 @@ __pycache__
 backup.db
 backup
 *~
+discordbot/backup.*

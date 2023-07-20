@@ -60,9 +60,9 @@ class ReadingSelector(discord.ui.Select):
             ),
             discord.SelectOption(
                 label="Show Images",
-                value="images",
+                value="image",
                 description="Show card images",
-                default=userdata["images"]
+                default=userdata["image"]
             ),
             discord.SelectOption(
                 label="Use Embed",
@@ -95,7 +95,7 @@ class ReadingSelector(discord.ui.Select):
     async def callback(self, interaction: discord.Interaction):
         with shelve.open(backup, writeback=True) as store:
             store[self.guildid]["users"][self.userid]["text"] = "text" in self.values
-            store[self.guildid]["users"][self.userid]["images"] = "images" in self.values
+            store[self.guildid]["users"][self.userid]["image"] = "image" in self.values
             store[self.guildid]["users"][self.userid]["embed"] = "embed" in self.values
             store[self.guildid]["users"][self.userid]["invert"] = "invert" in self.values
             store[self.guildid]["users"][self.userid]["private"] = "private" in self.values
