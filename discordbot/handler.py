@@ -21,28 +21,31 @@ READING_DEFAULTS = {
 }
 
 async def handle(ctx: Context, read: ReadingType):
-    opts = get_opts(ctx.interaction)
-    interaction: discord.Interaction = ctx.interaction
-    await ctx.defer(ephemeral=opts['private'])
-    messages, files = build_response(ctx.interaction, read, opts)
-    if len(messages) == 1:
-        embed = None
-        message = messages[0]
-        file = files[0]
-        if opts['embed']:
-            embed = message
-            message = None
-        await interaction.followup.send(content=message, file=file, embed=embed)
-    elif opts['embed']:
-        pages: list[Page] = []
-        for i in range(0, len(messages)):
-            pages.append(Page(files=[files[i]], embeds=[messages[i]]))
-        paginator = Paginator(pages=pages)
-        await paginator.respond(interaction, ephemeral=opts['private'])
-    else:
-        
-        for i in range(0, len(messages)):
-            await ctx.send_followup(content=messages[i], file=files[i], ephemeral=opts['private'])
+    try:
+        opts = get_opts(ctx.interaction)
+        interaction: discord.Interaction = ctx.interaction
+        await ctx.defer(ephemeral=opts['private'])
+        messages, files = build_response(ctx.interaction, read, opts)
+        if len(messages) == 1:
+            embed = None
+            message = messages[0]
+            file = files[0]
+            if opts['embed']:
+                embed = message
+                message = None
+            await interaction.followup.send(content=message, file=file, embed=embed)
+        elif opts['embed']:
+            pages: list[Page] = []
+            for i in range(0, len(messages)):
+                pages.append(Page(files=[files[i]], embeds=[messages[i]]))
+            paginator = Paginator(pages=pages)
+            await paginator.respond(interaction, ephemeral=opts['private'])
+        else:
+            
+            for i in range(0, len(messages)):
+                await ctx.send_followup(content=messages[i], file=files[i], ephemeral=opts['private'])
+    except Exception as e:
+        await ctx.followup.send("(if you're seeing this, please let us know!): " + e, ephemeral=True)
 
 
 async def handle_interaction(interaction, read: ReadingType):

@@ -55,10 +55,7 @@ async def _about(ctx):
              guild_ids=guild_ids)
 @discord.option("numcards", description="Number of cards to draw", required=True)
 async def _pull(ctx, numcards: int):
-    try:
-        await handle(ctx, NCardR(numcards))
-    except Exception as e:
-        await ctx.followup.send(e, ephemeral=True)
+    await handle(ctx, NCardR(numcards))
 
 def addCommand(t: ReadingType):
     @bot.slash_command(name=t.id,
