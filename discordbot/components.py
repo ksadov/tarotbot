@@ -1,5 +1,5 @@
 import discord
-from common.tarot import READING_TYPE_ENUM, ReadingType, Decks, MajorMinor
+from common.tarot import SIMPLE_READINGS, ReadingType, Decks, MajorMinor
 from discordbot.handler import READING_DEFAULTS, handle_interaction
 import shelve
 from itertools import chain
@@ -22,7 +22,7 @@ class ReadingButton(discord.ui.Button):
 class ReadingSelectorView(discord.ui.View):
     def __init__(self):
         super().__init__(timeout=None)
-        for t in READING_TYPE_ENUM:
+        for t in SIMPLE_READINGS:
             self.add_item(ReadingButton(t))
 
 class DeckSelector(discord.ui.Select):
@@ -60,7 +60,7 @@ class ReadingSelector(discord.ui.Select):
             ),
             discord.SelectOption(
                 label="Show Images",
-                value="images",
+                value="image",
                 description="Show card images",
                 default=userdata["image"]
             ),
@@ -95,7 +95,7 @@ class ReadingSelector(discord.ui.Select):
     async def callback(self, interaction: discord.Interaction):
         with shelve.open(backup, writeback=True) as store:
             store[self.guildid]["users"][self.userid]["text"] = "text" in self.values
-            store[self.guildid]["users"][self.userid]["images"] = "images" in self.values
+            store[self.guildid]["users"][self.userid]["image"] = "image" in self.values
             store[self.guildid]["users"][self.userid]["embed"] = "embed" in self.values
             store[self.guildid]["users"][self.userid]["invert"] = "invert" in self.values
             store[self.guildid]["users"][self.userid]["private"] = "private" in self.values

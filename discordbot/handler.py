@@ -48,6 +48,7 @@ async def handle(ctx: Context, read: ReadingType):
         await ctx.followup.send("(if you're seeing this, please let us know!): " + e, ephemeral=True)
 
 
+# needed for clicked componenets
 async def handle_interaction(interaction, read: ReadingType):
     opts = get_opts(interaction)
     messages, files = build_response(interaction, read, opts)
@@ -62,7 +63,7 @@ async def handle_interaction(interaction, read: ReadingType):
     await interaction.response.send_message(content=message, file=file, embed=embed, ephemeral=opts['private'])
 
 def build_response(interaction, read, opts):
-    cards = tarot.draw(read.num, opts["invert"], opts["majorminor"])
+    cards = tarot.draw(read.numcards, opts["invert"], opts["majorminor"])
     
     MAX_COUNT = 25 if opts["embed"] else 24
     cards = [cards[start:start + MAX_COUNT] for start in range(0,len(cards),MAX_COUNT)] if opts['text'] else [cards]

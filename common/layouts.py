@@ -1,5 +1,8 @@
 from math import ceil, sqrt
 from PIL import Image, ImageDraw
+from typing import Callable, TypeAlias
+
+imgfunc_type: TypeAlias = Callable[[list[Image.Image], int, int], Image.Image]
 
 def draw1img (cards, cardwidth: int, cardheight: int) -> Image:
     """Returns an Image representing a 1-card spread.
