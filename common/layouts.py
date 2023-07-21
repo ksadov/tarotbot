@@ -1,4 +1,8 @@
+from math import ceil, sqrt
 from PIL import Image, ImageDraw
+from typing import Callable, TypeAlias
+
+imgfunc_type: TypeAlias = Callable[[list[Image.Image], int, int], Image.Image]
 
 def draw1img (cards, cardwidth: int, cardheight: int) -> Image:
     """Returns an Image representing a 1-card spread.
@@ -93,4 +97,32 @@ def celticimg (cards, cardwidth: int, cardheight: int) -> Image:
     img.paste(cards[9], (column4, row1))
     card2 = cards[1].rotate(90, expand = 1)
     img.paste(card2, (column1_5, row2_5 + 2*image_border))
+    return img
+
+def genericimg (cards, cardwidth: int, cardheight: int) -> Image:
+    """Returns an Image representing a spread for an arbitrary number of cards.
+
+        Args:
+            cards (List[Image]): list containing the cards in the spread
+            cardwidth: the width of the card image
+            cardheight: the height of the card image
+
+    """
+    image_border = 20
+    ratio = (9*cardwidth + 2*image_border) / (16*cardheight + 2*image_border)
+    rows = round(sqrt(len(cards)*ratio))
+    cols = ceil(len(cards) / rows)
+    total_width = (cols*(cardwidth + image_border) - image_border)
+    total_height = (rows*(cardheight + image_border) - image_border)
+
+    img = Image.new('RGBA', (total_width, total_height), (255, 0, 0, 0))
+    lastrow_length = len(cards) - (rows - 1)*cols
+    lastrow_width = lastrow_length * cardwidth + (lastrow_length - 2)*image_border
+    for i in range(0, rows):
+        offset = round((total_width - lastrow_width - image_border) / 2) if i==rows-1 else 0
+        for j in range(0, cols):
+            cardnum = i*cols + j
+            if cardnum >= len(cards):
+                break
+            img.paste(cards[i*cols + j], (j*(image_border + cardwidth) + offset, i*(image_border + cardheight)))
     return img

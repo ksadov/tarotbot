@@ -5,10 +5,11 @@ anyio==3.6.1
 APScheduler==3.9.1
 async-timeout==4.0.2
 attrs==21.4.0
+Brotli==1.0.9
 brotlipy==0.7.0
 cachetools==5.2.0
 cchardet==2.1.7
-certifi==2022.6.15
+certifi==2022.12.7
 cffi==1.15.0
 chardet==4.0.0
 charset-normalizer==2.0.12
@@ -20,9 +21,9 @@ httpx==0.23.0
 idna==3.3
 multidict==6.0.2
 orjson==3.6.8
-Pillow==9.1.0
-py-cord==2.0.0b7
-pycares==4.1.2
+Pillow==9.3.0
+py-cord @ git+https://github.com/Pycord-Development/pycord@ad2e0722f00aa44c923b70de942042d0fdb1ea62
+pycares==4.2.0
 pycparser==2.21
 python-dotenv==0.20.0
 python-telegram-bot==20.0a1
@@ -32,6 +33,7 @@ rfc3986==1.5.0
 six==1.16.0
 sniffio==1.2.0
 tornado==6.1
+types-Pillow==10.0.0.1
 typing_extensions==4.2.0
 tzdata==2022.1
 tzlocal==4.2

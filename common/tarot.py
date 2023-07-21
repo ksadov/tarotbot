@@ -1,22 +1,28 @@
 import random
-from PIL import Image, ImageDraw
+from PIL import Image
 from typing import List
 from enum import Enum, unique
 from os import path
 from . import layouts
+from dataclasses import dataclass, field
 
-@unique
-class ReadingType(Enum):
-    def __init__(self, fullname, id, numcards, description, imgfunc):
-        self.fullname = fullname
-        self.id = id
-        self.num = numcards
-        self.description = description
-        self.imgfunc = imgfunc
-    ONE = ("One card", "1card", 1, "One card tarot reading", layouts.draw1img)
-    THREE = ("Three cards", "3card", 3, "Three card tarot reading", layouts.draw3img)
-    FIVE = ("Five cards", "5card", 5, "Five card tarot reading", layouts.draw5img)
-    CELTIC = ("Celtic Cross", "celtic", 10, "Celtic cross tarot reading", layouts.celticimg)
+@dataclass
+class ReadingType():
+     """Class for representing a type of tarot reading"""
+     fullname: str
+     id: str
+     numcards: int
+     description: str
+     imgfunc: layouts.imgfunc_type = field(repr=False, compare=False)
+
+OneCardR = ReadingType("One card", "1card", 1, "One card tarot reading", layouts.draw1img)
+ThreeCardR = ReadingType("Three cards", "3card", 3, "Three card tarot reading", layouts.draw3img)
+FiveCardR = ReadingType("Five cards", "5card", 5, "Five card tarot reading", layouts.draw5img)
+CelticR = ReadingType("Celtic Cross", "celtic", 10, "Celtic cross tarot reading", layouts.celticimg)
+def NCardR(numCards):
+     return ReadingType("{} cards".format(numCards), "ncard", numCards, "{} card tarot reading".format(numCards), layouts.genericimg)
+
+SIMPLE_READINGS = [OneCardR, ThreeCardR, FiveCardR, CelticR]
 
 @unique
 class Decks(Enum):
@@ -34,6 +40,7 @@ class Decks(Enum):
     DEFAULT = ("default", "Default", "Default cards")
     SWISS = ("swiss", "Swiss", "IJJ Swiss cards")
     PLANET_SCUM = ("planetscum", "Planet Scum", "Planet Scum Custom Cards", False)
+    RIDER_WAITE_SMITH = ("rider-waite-smith", "Rider-Waite-Smith", "Rider-Waite-Smith cards")
 
 @unique
 class MajorMinor(Enum):
@@ -342,6 +349,9 @@ def draw(n: int, invert=True, majorminor: MajorMinor = MajorMinor.BOTH) -> List[
 
     """
     deck = make_deck(majorminor)
+    if n < 1 or n > len(deck):
+        raise ValueError(f"Number of cards must be between 1 and {len(deck)}")
+
     hand = []
     for i in range(n):
         mycard = deck[random.randrange(len(deck))]
@@ -369,15 +379,16 @@ def makeImgList (cards: List[Card], deck: Decks):
 
 
 
-def cardimg(cardsO: List[Card], deck: Decks, command: ReadingType) -> Image:
+def cardimg(cardsO: List[Card], deck: Decks, imgfunc: layouts.imgfunc_type) -> Image:
     """Returns an Image of the cards in cards0 in a spread specified by command.
 
         Args:
             cards0: the cards in the spread
+            deck: the deck (set of card images) to use
             command: the spread. Valid spreads are 1card, 3card, 5card, celtic
     """
     cards = makeImgList(cardsO, deck)
     cardwidth = max(map(lambda x: x.width, cards))
     cardheight = max(map(lambda x: x.height, cards))
-    img = command.imgfunc(cards, cardwidth, cardheight)
+    img = imgfunc(cards, cardwidth, cardheight)
     return img

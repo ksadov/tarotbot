@@ -1,9 +1,11 @@
 import discord
 from io import BytesIO
 from common import tarot
-from common.tarot import ReadingType, Decks, MajorMinor
+from common.tarot import Card, ReadingType, Decks, MajorMinor
 import shelve
 import os
+from discord.ext.commands import Context
+from discord.ext.pages import Page, Paginator
 
 
 backup = os.path.join(os.path.dirname(__file__), 'backup')
@@ -18,41 +20,114 @@ READING_DEFAULTS = {
     "invert": True,
 }
 
-async def handle(interaction: discord.Interaction, reading_type: ReadingType):
+async def handle(ctx: Context, read: ReadingType):
+    try:
+        opts = get_opts(ctx.interaction)
+        interaction: discord.Interaction = ctx.interaction
+        await ctx.defer(ephemeral=opts['private'])
+        messages, files, embeds = build_response(ctx.interaction, read, opts)
+        if len(messages) == 1:
+            message = messages[0]
+            file = files[0]
+            embed = embeds[0]
+            if file:
+                await interaction.followup.send(content=message, file=file, embed=embed)
+            else:
+                await interaction.followup.send(content=message, embed=embed)
+        elif opts['embed']:
+            pages: list[Page] = []
+            for i in range(0, len(messages)):
+                if files[i]:
+                    pages.append(Page(files=[files[i]], embeds=[embeds[i]]))
+                else:
+                    pages.append(Page(embeds=[embeds[i]]))
+            paginator = Paginator(pages=pages)
+            await paginator.respond(interaction, ephemeral=opts['private'])
+        else:
+            for i in range(0, len(messages)):
+                if files[i]:
+                    await ctx.send_followup(content=messages[i], file=files[i], ephemeral=opts['private'])
+                else:
+                    await ctx.send_followup(content=messages[i], ephemeral=opts['private'])
+    except Exception as e:
+        await ctx.followup.send("(if you're seeing this, please let us know!): " + str(e), ephemeral=True)
+
+
+# needed for clicked componenets
+async def handle_interaction(interaction, read: ReadingType):
+    opts = get_opts(interaction)
+    messages, files, embeds = build_response(interaction, read, opts)
+    message = messages[0]
+    file = files[0]
+    embed = embeds[0]
+    if file:
+        await interaction.response.send_message(content=message, file=file, embed=embed, ephemeral=opts['private'])
+    else:
+        await interaction.response.send_message(content=message, embed=embed, ephemeral=opts['private'])
+
+def build_response(interaction, read, opts):
+    cards = tarot.draw(read.numcards, opts["invert"], opts["majorminor"])
+    
+    MAX_COUNT = 25 if opts["embed"] else 24
+    cards = [cards[start:start + MAX_COUNT] for start in range(0,len(cards),MAX_COUNT)] if opts['text'] else [cards]
+
+    # outputs
+    messages: list[str] = []
+    files: list[discord.File] = []
+    embeds: list[discord.Embed] = []
+
+    for i in range(0, len(cards)):
+        message, file, embed = message_and_files(cards[i], opts, interaction, read, i, len(cards), MAX_COUNT)
+        messages.append(message)
+        files.append(file)
+        embeds.append(embed)
+
+    return messages, files, embeds
+
+def get_opts(interaction):
     opts = READING_DEFAULTS
     gid = str(interaction.guild_id)
     uid = str(interaction.user.id)
     with shelve.open(backup, 'r') as store:
         if gid in store and uid in store[gid]["users"]:
             opts = store[gid]["users"][uid]
-    cards = tarot.draw(reading_type.num, opts["invert"], opts["majorminor"])
+    return opts
+
+
+def message_and_files(cards: list[Card], opts, interaction, read, count, total, MAX_COUNT):
     response = tarot.cardtxt(cards)
-    who = "<@{}>, here is your reading\n".format(interaction.user.id)
+    who = (
+        "<@{}>, here is your reading".format(interaction.user.id) 
+           + (" (pg {}/{})".format(count+1, total) if total > 1 else "") 
+           + "\n"
+           )
+    
+    # outputs
     file = None
-    embed = None
     message = who
+    embed = None
+
     if opts["image"]:
-        im = tarot.cardimg(cards, opts["deck"], reading_type)
+        im = tarot.cardimg(cards, opts["deck"], read.imgfunc)
         with BytesIO() as buf:
             im.save(buf, "PNG")
             buf.seek(0)
-            file = discord.File(fp=buf,filename="image.png")
+            file = discord.File(fp=buf,filename=f"image_{count}.png")
+            
 
     if opts["embed"]:
-        embed = discord.Embed(title="{} reading for {}".format(reading_type.fullname, interaction.user.display_name),
+        embed = discord.Embed(title="{} reading for {}".format(read.fullname, interaction.user.display_name),
                               type="rich",
                               color=color)
 
         if opts["text"]:
-            should_inline = reading_type in [ReadingType.ONE, ReadingType.THREE]
             for i, (n,v) in enumerate(response):
-                embed.add_field(name='{}) {}'.format(i+1,n), value=v,
-                                    inline=should_inline)
+                    embed.add_field(name='{}) {}'.format((count * MAX_COUNT) + i+1,n), value=v, inline=False)
         if opts["image"]:
-            embed.set_image(url="attachment://image.png")
+            embed.set_image(url=f"attachment://image_{count}.png")
     else:
         if opts["text"]:
             for i, (n,v) in enumerate(response):
-                message = (message + "\n**" + str(i+1) + ") " +
+                message = (message + "\n**" + str((count * MAX_COUNT) + i+1) + ") " +
                                 n + "**\n" + v)
-    await interaction.response.send_message(content=message, file=file, embed=embed, ephemeral=opts["private"])
+    return message, file, embed

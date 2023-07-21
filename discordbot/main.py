@@ -1,11 +1,11 @@
 # attempting to switch to pycord because interactions has annoyed me
 import os
-from common.tarot import ReadingType
+from common import layouts
+from common.tarot import SIMPLE_READINGS, NCardR, ReadingType
 from dotenv import load_dotenv
 import discord
 from discordbot.components import ReadingSelectorView, AboutView, SettingsView
 from discordbot.handler import handle
-import discordbot.makeBackupFile
 
 # TODO update this
 help_message = """For support or to request new features, join our discord server.
@@ -18,7 +18,7 @@ load_dotenv()
 if os.getenv("TAROT_DEVELOPMENT") == "true":
     token = os.getenv('TEST_TOKEN')
     application_id = os.getenv('TEST_APPLICATION_ID')
-    guild_ids = [357633267861553162, 410850945229127692]
+    guild_ids = [int(id) for id in os.getenv("GUILD_IDS").split(',')]
 else:
     token = os.getenv('DISCORD_TOKEN')
     application_id = os.getenv('DISCORD_APPLICATION_ID')
@@ -48,16 +48,23 @@ async def _tarotsettings(ctx):
              guild_ids=guild_ids)
 async def _about(ctx):
     await ctx.respond(help_message, view=AboutView(), ephemeral=True)
+    
+    
+@bot.slash_command(name="pull",
+             description="Pull cards from the deck",
+             guild_ids=guild_ids)
+@discord.option("numcards", description="Number of cards to draw", required=True)
+async def _pull(ctx, numcards: int):
+    await handle(ctx, NCardR(numcards))
 
-
-def addCommand(t):
+def addCommand(t: ReadingType):
     @bot.slash_command(name=t.id,
                  description=t.description,
                  guild_ids=guild_ids)
     async def _do_reading(ctx):
-        await handle(ctx.interaction, t)
+        await handle(ctx, t)
 
-for t in ReadingType:
+for t in SIMPLE_READINGS:
     addCommand(t)
     help_message += "/{}: {}\n".format(t.id, t.description)
 
