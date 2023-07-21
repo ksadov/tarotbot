@@ -25,40 +25,32 @@ async def handle(ctx: Context, read: ReadingType):
         opts = get_opts(ctx.interaction)
         interaction: discord.Interaction = ctx.interaction
         await ctx.defer(ephemeral=opts['private'])
-        messages, files = build_response(ctx.interaction, read, opts)
+        messages, files, embeds = build_response(ctx.interaction, read, opts)
         if len(messages) == 1:
-            embed = None
             message = messages[0]
             file = files[0]
-            if opts['embed']:
-                embed = message
-                message = None
+            embed = embeds[0]
             await interaction.followup.send(content=message, file=file, embed=embed)
         elif opts['embed']:
             pages: list[Page] = []
             for i in range(0, len(messages)):
-                pages.append(Page(files=[files[i]], embeds=[messages[i]]))
+                pages.append(Page(files=[files[i]], embeds=[embeds[i]]))
             paginator = Paginator(pages=pages)
             await paginator.respond(interaction, ephemeral=opts['private'])
         else:
-            
             for i in range(0, len(messages)):
                 await ctx.send_followup(content=messages[i], file=files[i], ephemeral=opts['private'])
     except Exception as e:
-        await ctx.followup.send("(if you're seeing this, please let us know!): " + e, ephemeral=True)
+        await ctx.followup.send("(if you're seeing this, please let us know!): " + str(e), ephemeral=True)
 
 
 # needed for clicked componenets
 async def handle_interaction(interaction, read: ReadingType):
     opts = get_opts(interaction)
-    messages, files = build_response(interaction, read, opts)
+    messages, files, embeds = build_response(interaction, read, opts)
+    message = messages[0]
     file = files[0]
-    if opts['embed']:
-        embed = messages[0]
-        message = None
-    else:
-        embed = None
-        message = messages[0]
+    embed = embeds[0]
 
     await interaction.response.send_message(content=message, file=file, embed=embed, ephemeral=opts['private'])
 
@@ -67,13 +59,19 @@ def build_response(interaction, read, opts):
     
     MAX_COUNT = 25 if opts["embed"] else 24
     cards = [cards[start:start + MAX_COUNT] for start in range(0,len(cards),MAX_COUNT)] if opts['text'] else [cards]
-    messages: list[str] | list[discord.Embed] = []
+
+    # outputs
+    messages: list[str] = []
     files: list[discord.File] = []
+    embeds: list[discord.Embed] = []
+
     for i in range(0, len(cards)):
-        message, file = message_and_files(cards[i], opts, interaction, read, i, len(cards), MAX_COUNT)
+        message, file, embed = message_and_files(cards[i], opts, interaction, read, i, len(cards), MAX_COUNT)
         messages.append(message)
         files.append(file)
-    return messages, files
+        embeds.append(embed)
+
+    return messages, files, embeds
 
 def get_opts(interaction):
     opts = READING_DEFAULTS
@@ -87,9 +85,17 @@ def get_opts(interaction):
 
 def message_and_files(cards: list[Card], opts, interaction, read, count, total, MAX_COUNT):
     response = tarot.cardtxt(cards)
-    who = "<@{}>, here is your reading (pg {}/{})\n".format(interaction.user.id, count+1, total)
+    who = (
+        "<@{}>, here is your reading".format(interaction.user.id) 
+           + (" (pg {}/{})".format(count+1, total) if total > 1 else "") 
+           + "\n"
+           )
+    
+    # outputs
     file = None
     message = who
+    embed = None
+
     if opts["image"]:
         im = tarot.cardimg(cards, opts["deck"], read.imgfunc)
         with BytesIO() as buf:
@@ -98,18 +104,18 @@ def message_and_files(cards: list[Card], opts, interaction, read, count, total, 
             file = discord.File(fp=buf,filename=f"image_{count}.png")
 
     if opts["embed"]:
-        message = discord.Embed(title="{} reading for {}".format(read.fullname, interaction.user.display_name),
+        embed = discord.Embed(title="{} reading for {}".format(read.fullname, interaction.user.display_name),
                               type="rich",
                               color=color)
 
         if opts["text"]:
             for i, (n,v) in enumerate(response):
-                    message.add_field(name='{}) {}'.format((count * MAX_COUNT) + i+1,n), value=v, inline=False)
+                    embed.add_field(name='{}) {}'.format((count * MAX_COUNT) + i+1,n), value=v, inline=False)
         if opts["image"]:
-            message.set_image(url=f"attachment://image_{count}.png")
+            embed.set_image(url=f"attachment://image_{count}.png")
     else:
         if opts["text"]:
             for i, (n,v) in enumerate(response):
                 message = (message + "\n**" + str((count * MAX_COUNT) + i+1) + ") " +
                                 n + "**\n" + v)
-    return message, file
+    return message, file, embed
