@@ -21,7 +21,7 @@ httpx==0.23.0
 idna==3.3
 multidict==6.0.2
 orjson==3.6.8
-Pillow==9.3.0
+Pillow==10.0.1
 py-cord @ git+https://github.com/Pycord-Development/pycord@ad2e0722f00aa44c923b70de942042d0fdb1ea62
 pycares==4.2.0
 pycparser==2.21
