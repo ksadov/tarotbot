@@ -22,7 +22,7 @@ idna==3.3
 multidict==6.0.2
 orjson==3.6.8
 Pillow==9.3.0
-py-cord @ git+https://github.com/Pycord-Development/pycord@ad2e0722f00aa44c923b70de942042d0fdb1ea62
+py-cord==2.4.1
 pycares==4.2.0
 pycparser==2.21
 python-dotenv==0.20.0
