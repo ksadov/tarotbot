@@ -45,9 +45,10 @@ class DeckSelector(discord.ui.Select):
         self.guildid = guildid
 
     async def callback(self, interaction: discord.Interaction):
+        await interaction.response.defer()
         with shelve.open(backup, writeback=True) as store:
             store[self.guildid]["users"][self.userid]["deck"] = Decks(self.values[0])
-        await interaction.response.send_message("New settings have been saved", ephemeral=True, delete_after=2.0)
+        await interaction.followup.send("New settings have been saved", ephemeral=True, delete_after=2.0)
 
 class ReadingSelector(discord.ui.Select):
     def __init__(self, guildid: str, userid: str, userdata):
@@ -93,13 +94,14 @@ class ReadingSelector(discord.ui.Select):
         self.guildid = guildid
 
     async def callback(self, interaction: discord.Interaction):
+        await interaction.response.defer()
         with shelve.open(backup, writeback=True) as store:
             store[self.guildid]["users"][self.userid]["text"] = "text" in self.values
             store[self.guildid]["users"][self.userid]["image"] = "image" in self.values
             store[self.guildid]["users"][self.userid]["embed"] = "embed" in self.values
             store[self.guildid]["users"][self.userid]["invert"] = "invert" in self.values
             store[self.guildid]["users"][self.userid]["private"] = "private" in self.values
-        await interaction.response.send_message("New settings have been saved", ephemeral=True, delete_after=2.0)
+        await interaction.followup.send("New settings have been saved", ephemeral=True, delete_after=2.0)
 
 
 class ArcanaSelector(discord.ui.Select):
@@ -134,9 +136,10 @@ class ArcanaSelector(discord.ui.Select):
         self.guildid = guildid
 
     async def callback(self, interaction: discord.Interaction):
+        await interaction.response.defer()
         with shelve.open(backup, writeback=True) as store:
             store[self.guildid]["users"][self.userid]["majorminor"] = MajorMinor(self.values[0])
-        await interaction.response.send_message("New settings have been saved", ephemeral=True, delete_after=2.0)
+        await interaction.followup.send("New settings have been saved", ephemeral=True, delete_after=2.0)
 
 class SettingsView(discord.ui.View):
     def __init__(self, guildid: str, userid: str):

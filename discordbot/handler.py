@@ -46,24 +46,25 @@ async def handle(ctx: Context, read: ReadingType):
         else:
             for i in range(0, len(messages)):
                 if files[i]:
-                    await ctx.send_followup(content=messages[i], file=files[i], ephemeral=opts['private'])
+                    await interaction.followup.send(content=messages[i], file=files[i], ephemeral=opts['private'])
                 else:
-                    await ctx.send_followup(content=messages[i], ephemeral=opts['private'])
+                    await interaction.followup.send(content=messages[i], ephemeral=opts['private'])
     except Exception as e:
-        await ctx.followup.send("(if you're seeing this, please let us know!): " + str(e), ephemeral=True)
+        await interaction.followup.send("(if you're seeing this, please let us know!): " + str(e), ephemeral=True)
 
 
 # needed for clicked componenets
 async def handle_interaction(interaction, read: ReadingType):
+    await interaction.response.defer()
     opts = get_opts(interaction)
     messages, files, embeds = build_response(interaction, read, opts)
     message = messages[0]
     file = files[0]
     embed = embeds[0]
     if file:
-        await interaction.response.send_message(content=message, file=file, embed=embed, ephemeral=opts['private'])
+        await interaction.followup.send(content=message, file=file, embed=embed, ephemeral=opts['private'])
     else:
-        await interaction.response.send_message(content=message, embed=embed, ephemeral=opts['private'])
+        await interaction.followup.send(content=message, embed=embed, ephemeral=opts['private'])
 
 def build_response(interaction, read, opts):
     cards = tarot.draw(read.numcards, opts["invert"], opts["majorminor"])
