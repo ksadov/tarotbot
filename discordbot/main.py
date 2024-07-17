@@ -8,7 +8,7 @@ from discordbot.components import ReadingSelectorView, AboutView, SettingsView
 from discordbot.handler import handle
 
 # TODO update this
-help_message = """For support or to request new features, join our discord server.\n
+help_message = """For support or to request new features, join our discord server. Feedback welcome!\n
 Available commands:\n
 /tarot: start a reading
 /tarotsettings: customize your readings
@@ -50,12 +50,13 @@ async def on_ready():
         else None  # User install options don't work in testing context
     ),
 )
-async def _tarot(ctx):
+async def _tarot(ctx: discord.ApplicationContext):
+    await ctx.defer(ephemeral=True)
     await ctx.respond(
         "What type of reading would you like?",
         view=ReadingSelectorView(),
         ephemeral=True,
-    )  # flags=64
+    )
 
 
 @bot.slash_command(
@@ -71,7 +72,8 @@ async def _tarot(ctx):
         else None
     ),
 )
-async def _tarotsettings(ctx):
+async def _tarotsettings(ctx: discord.ApplicationContext):
+    await ctx.defer(ephemeral=True)
     await ctx.respond(
         "Customize your tarot readings",
         view=SettingsView(ctx.interaction.guild_id, str(ctx.interaction.user.id)),
@@ -92,7 +94,8 @@ async def _tarotsettings(ctx):
         else None
     ),
 )
-async def _about(ctx):
+async def _about(ctx: discord.ApplicationContext):
+    await ctx.defer(ephemeral=True)
     await ctx.respond(help_message, view=AboutView(), ephemeral=True)
 
 
@@ -147,39 +150,8 @@ if __name__ == "__main__":
 
 
 # TODO: Add optional text input
-# change storage to handle non-guild (user install) requests
-# change selectors based on user install or guild install
 # add setting to disable descriptions but keep card names
 # info about tarot cards and meanings
 # playing cards
 # oracle cards
-
-"""
-Ignoring exception in command tarotsettings:
-Traceback (most recent call last):
-  File "/Users/joshuakaplan/Documents/code/python/tarotbot/.direnv/python-3.10/lib/python3.10/site-packages/discord/commands/core.py", line 138, in wrapped
-    ret = await coro(arg)
-  File "/Users/joshuakaplan/Documents/code/python/tarotbot/.direnv/python-3.10/lib/python3.10/site-packages/discord/commands/core.py", line 1082, in _invoke
-    await self.callback(ctx, **kwargs)
-  File "/Users/joshuakaplan/Documents/code/python/tarotbot/discordbot/main.py", line 75, in _tarotsettings
-    await ctx.respond(
-  File "/Users/joshuakaplan/Documents/code/python/tarotbot/.direnv/python-3.10/lib/python3.10/site-packages/discord/interactions.py", line 620, in respond
-    return await self.response.send_message(*args, **kwargs)
-  File "/Users/joshuakaplan/Documents/code/python/tarotbot/.direnv/python-3.10/lib/python3.10/site-packages/discord/interactions.py", line 961, in send_message
-    await self._locked_response(
-  File "/Users/joshuakaplan/Documents/code/python/tarotbot/.direnv/python-3.10/lib/python3.10/site-packages/discord/interactions.py", line 1292, in _locked_response
-    await coro
-  File "/Users/joshuakaplan/Documents/code/python/tarotbot/.direnv/python-3.10/lib/python3.10/site-packages/discord/webhook/async_.py", line 222, in request
-    raise NotFound(response, data)
-discord.errors.NotFound: 404 Not Found (error code: 10062): Unknown interaction
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/Users/joshuakaplan/Documents/code/python/tarotbot/.direnv/python-3.10/lib/python3.10/site-packages/discord/bot.py", line 1137, in invoke_application_command
-    await ctx.command.invoke(ctx)
-  File "/Users/joshuakaplan/Documents/code/python/tarotbot/.direnv/python-3.10/lib/python3.10/site-packages/discord/commands/core.py", line 435, in invoke
-    await injected(ctx)
-  File "/Users/joshuakaplan/Documents/code/python/tarotbot/.direnv/python-3.10/lib/python3.10/site-packages/discord/commands/core.py", line 146, in wrapped
-    raise ApplicationCommandInvokeError(exc) from exc
-discord.errors.ApplicationCommandInvokeError: Application Command raised an exception: NotFound: 404 Not Found (error code: 10062): Unknown interaction"""
+# make uploading large images faster

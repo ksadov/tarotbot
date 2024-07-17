@@ -23,8 +23,8 @@ READING_DEFAULTS = {
 
 async def handle(ctx: Context, read: ReadingType):
     try:
-        opts = get_opts(ctx.interaction)
         interaction: discord.Interaction = ctx.interaction
+        opts = get_opts(interaction)
         await ctx.defer(ephemeral=opts["private"])
         messages, files, embeds = build_response(ctx.interaction, read, opts)
         if len(messages) == 1:
