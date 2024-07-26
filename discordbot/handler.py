@@ -1,11 +1,12 @@
 import discord
 from io import BytesIO
 from common import tarot
-from common.tarot import Card, ReadingType, DECKS, MajorMinor
+from common.tarot import Card, ReadingType, DECKS, MajorMinor, Facing
 import shelve
 import os
 from discord.ext.commands import Context
 from discord.ext.pages import Page, Paginator
+from typing import List, Tuple
 
 
 backup = os.path.join(os.path.dirname(__file__), "backup")
@@ -13,35 +14,40 @@ color = discord.Colour(0x6B1BF8)
 READING_DEFAULTS = {
     "deck": "rider-waite-smith",
     "majorminor": MajorMinor.BOTH,
-    "text": True,
+    "text": True,  # card names and descriptions
+    "descriptions": True,  # only shown if text is also true
     "embed": True,
     "image": True,
-    "private": True,
+    "private": False,
     "invert": True,
 }
 
 
-async def handle(ctx: Context, read: ReadingType):
+async def handle(
+    interaction: discord.Interaction,
+    read: ReadingType,
+    targetUser: discord.Member | None = None,
+):
     try:
-        interaction: discord.Interaction = ctx.interaction
         opts = get_opts(interaction)
-        await ctx.defer(ephemeral=opts["private"])
-        messages, files, embeds = build_response(ctx.interaction, read, opts)
+        await interaction.response.defer(ephemeral=opts["private"])
+        messages, files, embeds = build_response(interaction, read, opts, targetUser)
         if len(messages) == 1:
-            message = messages[0]
-            file = files[0]
-            embed = embeds[0]
-            if file:
-                await interaction.followup.send(content=message, file=file, embed=embed)
-            else:
-                await interaction.followup.send(content=message, embed=embed)
+            kwargs: dict = {"content": messages[0]}
+            if len(files) > 0:
+                kwargs["file"] = files[0]
+            if len(embeds) > 0:
+                kwargs["embed"] = embeds[0]
+            await interaction.followup.send(**kwargs)
         elif opts["embed"]:
             pages: list[Page] = []
             for i in range(0, len(messages)):
-                if files[i]:
-                    pages.append(Page(files=[files[i]], embeds=[embeds[i]]))
-                else:
-                    pages.append(Page(embeds=[embeds[i]]))
+                pages.append(
+                    Page(
+                        files=[files[i]] if len(files) > i else None,
+                        embeds=[embeds[i]] if len(embeds) > i else None,
+                    )
+                )
             paginator = Paginator(pages=pages)
             await paginator.respond(interaction, ephemeral=opts["private"])
         else:
@@ -55,30 +61,19 @@ async def handle(ctx: Context, read: ReadingType):
                         content=messages[i], ephemeral=opts["private"]
                     )
     except Exception as e:
+        print(e)
         await interaction.followup.send(
-            "(if you're seeing this, please let us know!): " + str(e), ephemeral=True
+            "Error (if you're seeing this, please let us know!): " + str(e),
+            ephemeral=True,
         )
 
 
-# needed for clicked componenets
-async def handle_interaction(interaction: discord.Interaction, read: ReadingType):
-    await interaction.response.defer()
-    opts = get_opts(interaction)
-    messages, files, embeds = build_response(interaction, read, opts)
-    message = messages[0]
-    file = files[0]
-    embed = embeds[0]
-    if file:
-        await interaction.followup.send(
-            content=message, file=file, embed=embed, ephemeral=opts["private"]
-        )
-    else:
-        await interaction.followup.send(
-            content=message, embed=embed, ephemeral=opts["private"]
-        )
-
-
-def build_response(interaction: discord.Interaction, read, opts):
+def build_response(
+    interaction: discord.Interaction,
+    read,
+    opts,
+    targetUser: discord.Member | None = None,
+):
     cards = tarot.draw(
         read.numcards, DECKS[opts["deck"]], opts["invert"], opts["majorminor"]
     )
@@ -97,11 +92,13 @@ def build_response(interaction: discord.Interaction, read, opts):
 
     for i in range(0, len(cards)):
         message, file, embed = message_and_files(
-            cards[i], opts, interaction, read, i, len(cards), MAX_COUNT
+            cards[i], opts, interaction, read, i, len(cards), MAX_COUNT, targetUser
         )
         messages.append(message)
-        files.append(file)
-        embeds.append(embed)
+        if file:
+            files.append(file)
+        if embed:
+            embeds.append(embed)
 
     return messages, files, embeds
 
@@ -109,6 +106,8 @@ def build_response(interaction: discord.Interaction, read, opts):
 def get_opts(interaction: discord.Interaction):
     opts = READING_DEFAULTS
     gid = str(interaction.guild_id)
+    if interaction.user is None:
+        raise Exception("No user found")
     uid = str(interaction.user.id)
     with shelve.open(backup, "r") as store:
         if (
@@ -123,11 +122,20 @@ def get_opts(interaction: discord.Interaction):
 
 
 def message_and_files(
-    cards: list[Card], opts, interaction, read, count, total, MAX_COUNT
+    cards: List[Tuple[Card, Facing]],
+    opts,
+    interaction,
+    read,
+    count,
+    total,
+    MAX_COUNT,
+    other_user: discord.Member | None = None,
 ):
     response = tarot.cardtxt(cards)
     who = (
-        "<@{}>, here is your reading".format(interaction.user.id)
+        "<@{}>, here is your reading".format(
+            interaction.user.id if other_user is None else other_user.id
+        )
         + (" (pg {}/{})".format(count + 1, total) if total > 1 else "")
         + "\n"
     )
@@ -147,7 +155,12 @@ def message_and_files(
     if opts["embed"]:
         embed = discord.Embed(
             title="{} reading for {}".format(
-                read.fullname, interaction.user.display_name
+                read.fullname,
+                (
+                    interaction.user.display_name
+                    if other_user is None
+                    else other_user.display_name
+                ),
             ),
             type="rich",
             color=color,
@@ -157,7 +170,7 @@ def message_and_files(
             for i, (n, v) in enumerate(response):
                 embed.add_field(
                     name="{}) {}".format((count * MAX_COUNT) + i + 1, n),
-                    value=v,
+                    value=v if opts["descriptions"] else "",
                     inline=False,
                 )
         if opts["image"]:
@@ -171,7 +184,7 @@ def message_and_files(
                     + str((count * MAX_COUNT) + i + 1)
                     + ") "
                     + n
-                    + "**\n"
-                    + v
+                    + "**"
+                    + ("\n\t" + v if opts["descriptions"] else "")
                 )
     return message, file, embed

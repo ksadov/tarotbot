@@ -5,7 +5,7 @@ from typing import Callable, TypeAlias
 imgfunc_type: TypeAlias = Callable[[list[Image.Image], int, int], Image.Image]
 
 
-def draw1img(cards, cardwidth: int, cardheight: int) -> Image:
+def draw1img(cards, cardwidth: int, cardheight: int) -> Image.Image:
     """Returns an Image representing a 1-card spread.
 
     Args:
@@ -22,7 +22,7 @@ def draw1img(cards, cardwidth: int, cardheight: int) -> Image:
     return img
 
 
-def draw3img(cards, cardwidth: int, cardheight: int) -> Image:
+def draw3img(cards, cardwidth: int, cardheight: int) -> Image.Image:
     """Returns an Image representing a 3-card spread.
 
     Args:
@@ -41,7 +41,7 @@ def draw3img(cards, cardwidth: int, cardheight: int) -> Image:
     return img
 
 
-def draw5img(cards, cardwidth: int, cardheight: int) -> Image:
+def draw5img(cards, cardwidth: int, cardheight: int) -> Image.Image:
     """Returns an Image representing a 5-card spread.
 
     Args:
@@ -66,7 +66,7 @@ def draw5img(cards, cardwidth: int, cardheight: int) -> Image:
     return img
 
 
-def celticimg(cards, cardwidth: int, cardheight: int) -> Image:
+def celticimg(cards, cardwidth: int, cardheight: int) -> Image.Image:
     """Returns an Image representing a Celtic Cross spread.
 
     Args:
@@ -105,7 +105,7 @@ def celticimg(cards, cardwidth: int, cardheight: int) -> Image:
     return img
 
 
-def genericimg(cards, cardwidth: int, cardheight: int) -> Image:
+def genericimg(cards, cardwidth: int, cardheight: int) -> Image.Image:
     """Returns an Image representing a spread for an arbitrary number of cards.
 
     Args:

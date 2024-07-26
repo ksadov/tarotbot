@@ -1,6 +1,5 @@
 import random
 from PIL import Image
-from typing import List, Dict
 from enum import Enum, unique
 from os import path, listdir
 from . import layouts
@@ -48,77 +47,43 @@ def NCardR(numCards):
 SIMPLE_READINGS = [OneCardR, ThreeCardR, FiveCardR, CelticR]
 
 
+@dataclass
 class Card:
-    """A class used to represent a tarot card.
+    """A class used to represent a tarot card."""
 
-    Attributes:
-        name: The name of the card
-        upright: Three-word description of a card's upright meaning
-        reversed: Three-word description of a card's reversed meaning
-        code: A short string representing the card's suit and rank
-        major: True if card is major arcana, False if card is minor arcana
-        up: True if a card is upright, False if inverted
-
-    """
-
-    def __init__(
-        self,
-        name: str,
-        upright: str,
-        reverse: str,
-        image_path: str,
-        major: bool,
-        up=True,
-    ):
-        self.name = name
-        self.upright = upright
-        self.reverse = reverse
-        self.image_path = image_path
-        self.major = major
-        self.up = up
-
-    def description(self) -> str:
-        """Returns the card name and its meaning, depending on its orientation.
-
-        Example:
-            King of Cups (upright): compassion, control, balance
-
-        """
-        if self.up:
-            descr = self.name + " (upright): " + self.upright
-        else:
-            descr = self.name + " (reversed): " + self.reverse
-        return descr
-
-    def get_name(self) -> str:
-        return "{} ({})".format(self.name, "upright" if self.up else "reversed")
-
-    def get_desc(self) -> str:
-        if self.up:
-            return self.upright
-        else:
-            return self.reverse
+    name: str  # the name of the card
+    upright: str  # comma-separated simple meanings for the upright form of the card
+    reverse: str  # comma-separated simple meanings for the reversed form of the card
+    code: str  # a short string representing the card's suit and rank
+    image_path: str  # a string representing the path to the image
+    major: bool  # True if the card is major arcana, False if the card is minor arcana
 
 
 @dataclass
 class Deck:
-    name: str
-    shortname: str
-    label: str
-    is_global: bool
-    cards: List[Card]
-    guilds: List[str]
+    name: str  # the name of the deck
+    shortname: (
+        str  # a short name for the deck, and also the name of the folder the deck is in
+    )
+    label: str  # string to display when showing the name of the deck
+    is_global: bool  # True if the deck applies to all guilds. False if the deck is only for certain guilds
+    all_cards: list[Card]  # A list of the cards in the deck
+    major_cards: list[Card]  # A list of only the major cards in the deck
+    minor_cards: list[Card]  # A list of only the minor cards in the deck
+    guilds: list[
+        str
+    ]  # A list of guilds ids the deck is allowed in, or [] if is_global is True
 
 
 # TODO: remove after updating shelve store
 @unique
 class Decks(Enum):
-    def __new__(cls, shortname, label, longname, global_d=True):
+    def __new__(cls, shortname: str, label: str, longname: str, global_d=True):
         obj = object.__new__(cls)
         obj._value_ = shortname
-        obj.shortname = shortname
-        obj.label = label
-        obj.longname = longname
+        obj.shortname = shortname  # type: ignore
+        obj.label = label  # type: ignore
+        obj.longname = longname  # type: ignore
         if global_d:
             cls.global_decks = cls.__dict__.get("global_decks", [])
             cls.global_decks.append(obj)
@@ -134,34 +99,57 @@ class Decks(Enum):
     )
 
 
-DECKS: Dict[str, Deck] = {}
+DECKS: dict[str, Deck] = {}
+default_tarot_cards: dict[str, Card] = {}
+with open("decks/tarot/default.json", "r") as f:
+    json_cards = json.load(f)
+    for code, card in json_cards.items():
+        default_tarot_cards[code] = Card(
+            card["name"],
+            card["upright_meaning"],
+            card["reversed_meaning"],
+            code,
+            card["image"],
+            card["type"] == "major",
+        )
 
 for deckjson in iglob("decks/tarot/*/deck.json"):
     with open(deckjson, "r") as f:
         deck_data = json.load(f)
-        new_cards = [
-            Card(
-                card["name"],
-                card["upright_meaning"],
-                card["reversed_meaning"],
-                path.join(
-                    path.dirname(__file__),
-                    "..",
-                    "decks",
-                    "tarot",
-                    deck_data["shortname"],
-                    card["image"],
-                ),
-                card["type"] == "major",
-            )
-            for card in deck_data["cards"]
-        ]
+        new_cards = copy.deepcopy(default_tarot_cards)
+        if "cards" in deck_data:
+            # override default cards
+            for code, card in deck_data["cards"].items():
+                new_cards[code] = Card(
+                    card.get("name")
+                    or default_tarot_cards[
+                        code
+                    ].name,  # only replace if fields are present (keep defaults otherwise)
+                    card.get("upright_meaning") or default_tarot_cards[code].upright,
+                    card.get("reversed_meaning") or default_tarot_cards[code].reverse,
+                    code,
+                    card.get("image") or default_tarot_cards[code].image_path,
+                    (card.get("type") == "major" or default_tarot_cards[code].major),
+                )
+        for card in new_cards.values():
+            card.image_path = path.join(
+                __file__,
+                "..",
+                "..",
+                "decks",
+                "tarot",
+                deck_data["shortname"],
+                card.image_path,
+            )  # add the full path
+
         new_deck = Deck(
             deck_data["name"],
             deck_data["shortname"],
             deck_data["label"],
             bool(deck_data["global"]),
-            new_cards,
+            list(new_cards.values()),
+            list(card for card in new_cards.values() if card.major),
+            list(card for card in new_cards.values() if not card.major),
             deck_data["guilds"] or [],
         )
         DECKS[deck_data["shortname"]] = new_deck
@@ -174,15 +162,10 @@ class MajorMinor(Enum):
     BOTH = "both"
 
 
-def make_deck(deck: Deck, majorminor: MajorMinor) -> List[int]:
-    """Returns a full deck of tarot cards."""
-
-    if majorminor == MajorMinor.MAJOR_ONLY:
-        return [i for i, card in enumerate(deck.cards) if card.major]
-    elif majorminor == MajorMinor.MINOR_ONLY:
-        return [i for i, card in enumerate(deck.cards) if not card.major]
-    else:
-        return [i for i, _ in enumerate(deck.cards)]
+@unique
+class Facing(Enum):
+    UPRIGHT = "upright"
+    REVERSED = "reversed"
 
 
 def draw(
@@ -190,8 +173,8 @@ def draw(
     chosenDeck: Deck = DECKS["rider-waite-smith"],
     invert=True,
     majorminor: MajorMinor = MajorMinor.BOTH,
-) -> List[Card]:
-    """Returns a list of n random cards from a full deck of cards.
+) -> list[tuple[Card, Facing]]:
+    """Returns a list of n random cards from a full deck of cards, along with the direction the card is facing
 
     Args:
         n: the number of cards to draw
@@ -202,42 +185,54 @@ def draw(
         minor_only: If True, only minor arcana cards will be drawn
 
     """
-    deck_indexes = make_deck(chosenDeck, majorminor)
-    if n < 1 or n > len(deck_indexes):
-        raise ValueError(f"Number of cards must be between 1 and {len(deck_indexes)}")
+    cards = []
+    if majorminor == MajorMinor.BOTH:
+        cards = chosenDeck.all_cards
+    elif majorminor == MajorMinor.MAJOR_ONLY:
+        cards = chosenDeck.major_cards
+    elif majorminor == MajorMinor.MINOR_ONLY:
+        cards = chosenDeck.minor_cards
 
-    hand = [copy.copy(chosenDeck.cards[i]) for i in random.sample(deck_indexes, n)]
-    for card in hand:
-        if not invert:
-            card.up = True
-        else:
-            if random.choice([True, False]):
-                card.up = True
-            else:
-                card.up = False
+    if n < 1 or n > len(cards):
+        raise ValueError(f"Number of cards must be between 1 and {len(cards)}")
 
-    return hand
+    hand = random.sample(cards, n)
+
+    return [
+        (
+            (card, Facing.UPRIGHT)
+            if not invert
+            else (card, random.choice((Facing.UPRIGHT, Facing.REVERSED)))
+        )
+        for card in hand
+    ]
 
 
-def cardtxt(cards: List[Card]):
+def cardtxt(cards: list[tuple[Card, Facing]]):
     """Returns a list of tuples containing descriptions of a list of cards."""
-    return [(card.get_name(), card.get_desc()) for card in cards]
+    return [
+        (
+            "{} ({})".format(card.name, facing.value),
+            card.upright if facing == Facing.UPRIGHT else card.reverse,
+        )
+        for card, facing in cards
+    ]
 
 
-def makeImgList(cards: List[Card]):
+def makeImgList(cards: list[tuple[Card, Facing]]):
     """Returns a list of Images corresponding to cards."""
     imgarray = []
-    for c in cards:
-        newcard = Image.open(c.image_path).convert("RGBA")
-        if not c.up:
-            newcardrev = newcard.rotate(180, expand=1)
-            imgarray.append(newcardrev)
-        else:
-            imgarray.append(newcard)
+    for card, facing in cards:
+        newcard = Image.open(card.image_path).convert("RGBA")
+        if facing == Facing.REVERSED:
+            newcard = newcard.rotate(180, expand=True)
+        imgarray.append(newcard)
     return imgarray
 
 
-def cardimg(cardsO: List[Card], imgfunc: layouts.imgfunc_type) -> Image:
+def cardimg(
+    cardsO: list[tuple[Card, Facing]], imgfunc: layouts.imgfunc_type
+) -> Image.Image:
     """Returns an Image of the cards in cards0 in a spread specified by command.
 
     Args:

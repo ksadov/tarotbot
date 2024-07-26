@@ -1,6 +1,6 @@
 import discord
 from common.tarot import SIMPLE_READINGS, ReadingType, DECKS, MajorMinor
-from discordbot.handler import READING_DEFAULTS, handle_interaction
+from discordbot.handler import READING_DEFAULTS, handle
 import shelve
 import os
 
@@ -17,7 +17,7 @@ class ReadingButton(discord.ui.Button):
         self.reading_type = reading_type
 
     async def callback(self, interaction: discord.Interaction):
-        await handle_interaction(interaction, self.reading_type)
+        await handle(interaction, self.reading_type)
 
 
 class ReadingSelectorView(discord.ui.View):
@@ -52,10 +52,12 @@ class DeckSelector(discord.ui.Select):
         await interaction.response.defer()
         with shelve.open(backup, writeback=True) as store:
             if self.guildid is None:
-                store["users"][self.userid]["deck"] = DECKS[self.values[0]].shortname
+                store["users"][self.userid]["deck"] = DECKS[
+                    str(self.values[0])
+                ].shortname
             else:
                 store["guilds"][str(self.guildid)]["users"][self.userid]["deck"] = (
-                    DECKS[self.values[0]].shortname
+                    DECKS[str(self.values[0])].shortname
                 )
         await interaction.followup.send(
             "New settings have been saved", ephemeral=True, delete_after=2.0
@@ -68,8 +70,14 @@ class ReadingSelector(discord.ui.Select):
             discord.SelectOption(
                 label="Show Text",
                 value="text",
-                description="Show card descriptions",
+                description="Show card names and descriptions",
                 default=userdata["text"],
+            ),
+            discord.SelectOption(
+                label="Show Descriptions",
+                value="descriptions",
+                description="Show card descriptions (requires Show Text)",
+                default=userdata["descriptions"],
             ),
             discord.SelectOption(
                 label="Show Images",
@@ -110,6 +118,9 @@ class ReadingSelector(discord.ui.Select):
         with shelve.open(backup, writeback=True) as store:
             if self.guildid is None:
                 store["users"][self.userid]["text"] = "text" in self.values
+                store["users"][self.userid]["descriptions"] = (
+                    "descriptions" in self.values
+                )
                 store["users"][self.userid]["image"] = "image" in self.values
                 store["users"][self.userid]["embed"] = "embed" in self.values
                 store["users"][self.userid]["invert"] = "invert" in self.values
@@ -118,6 +129,9 @@ class ReadingSelector(discord.ui.Select):
                 store["guilds"][str(self.guildid)]["users"][self.userid]["text"] = (
                     "text" in self.values
                 )
+                store["guilds"][str(self.guildid)]["users"][self.userid][
+                    "descriptions"
+                ] = ("descriptions" in self.values)
                 store["guilds"][str(self.guildid)]["users"][self.userid]["image"] = (
                     "image" in self.values
                 )

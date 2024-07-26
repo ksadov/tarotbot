@@ -1,7 +1,5 @@
-# attempting to switch to pycord because interactions has annoyed me
 import os
-from common import layouts
-from common.tarot import SIMPLE_READINGS, NCardR, ReadingType
+from common.tarot import SIMPLE_READINGS, NCardR, ReadingType, OneCardR
 from dotenv import load_dotenv
 import discord
 from discordbot.components import ReadingSelectorView, AboutView, SettingsView
@@ -19,7 +17,9 @@ load_dotenv()
 if os.getenv("TAROT_DEVELOPMENT") == "true":
     token = os.getenv("TEST_TOKEN")
     application_id = os.getenv("TEST_APPLICATION_ID")
-    guild_ids = [int(id) for id in os.getenv("GUILD_IDS").split(",")]
+    guild_ids = os.getenv("GUILD_IDS")
+    if guild_ids is not None:
+        guild_ids = [int(id) for id in guild_ids.split(",")]
     # guild_ids = None  # uncomment for testing user installs
 else:
     token = os.getenv("DISCORD_TOKEN")
@@ -27,7 +27,8 @@ else:
     guild_ids = None
 
 bot = discord.AutoShardedBot(
-    debug_guilds=guild_ids, activity=discord.Game("/tarot for a reading")
+    debug_guilds=guild_ids,
+    activity=discord.Game("/tarot for a reading. /tarothelp to see all commands"),
 )
 
 
@@ -59,6 +60,11 @@ async def _tarot(ctx: discord.ApplicationContext):
     )
 
 
+@bot.user_command(name="One Card Tarot Reading", guild_ids=guild_ids)
+async def _tarot_user(ctx: discord.ApplicationContext, member: discord.Member):
+    await handle(ctx.interaction, OneCardR, member)
+
+
 @bot.slash_command(
     name="tarotsettings",
     description="Customize your tarot readings",
@@ -73,6 +79,11 @@ async def _tarot(ctx: discord.ApplicationContext):
     ),
 )
 async def _tarotsettings(ctx: discord.ApplicationContext):
+    if ctx.interaction.user is None:
+        await ctx.respond(
+            "Error. User is None. Please let us know if you see this message"
+        )
+        return
     await ctx.defer(ephemeral=True)
     await ctx.respond(
         "Customize your tarot readings",
@@ -114,7 +125,7 @@ async def _about(ctx: discord.ApplicationContext):
 )
 @discord.option("numcards", description="Number of cards to draw", required=True)
 async def _pull(ctx, numcards: int):
-    await handle(ctx, NCardR(numcards))
+    await handle(ctx.interaction, NCardR(numcards))
 
 
 def addCommand(t: ReadingType):
@@ -132,7 +143,7 @@ def addCommand(t: ReadingType):
         ),
     )
     async def _do_reading(ctx):
-        await handle(ctx, t)
+        await handle(ctx.interaction, t)
 
 
 for t in SIMPLE_READINGS:
@@ -150,8 +161,10 @@ if __name__ == "__main__":
 
 
 # TODO: Add optional text input
-# add setting to disable descriptions but keep card names
 # info about tarot cards and meanings
 # playing cards
 # oracle cards
 # make uploading large images faster
+#   maybe add option to reduce image size
+# add as right click option on users
+# add as right click option on messages (as the question)
