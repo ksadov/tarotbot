@@ -1,0 +1,9 @@
+{
+  "name": "Standard playing cards",
+  "shortname": "standard",
+  "label": "Standard Playing Cards",
+  "type": "playingcards",
+  "global": true,
+  "guilds": [],
+  "cards": {}
+}

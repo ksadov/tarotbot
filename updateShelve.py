@@ -28,3 +28,9 @@ if __name__ == "__main__":
                         ].shortname
                 newstore["guilds"][guild] = newdata
     os.replace(newbackup, backup)
+
+
+for user in f["users"]:
+    if f["users"][user]["deck"] == "default":
+        print("whoops")
+        f["users"][user]["deck"] = "rider-waite-smith"

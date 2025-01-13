@@ -59,9 +59,16 @@ class Card:
     major: bool  # True if the card is major arcana, False if the card is minor arcana
 
 
+@unique
+class DeckType(Enum):
+    TAROT = "tarot"
+    PLAYING_CARD = "playingcards"
+
+
 @dataclass
 class Deck:
     name: str  # the name of the deck
+    type: DeckType
     shortname: (
         str  # a short name for the deck, and also the name of the folder the deck is in
     )
@@ -75,84 +82,134 @@ class Deck:
     ]  # A list of guilds ids the deck is allowed in, or [] if is_global is True
 
 
-# TODO: remove after updating shelve store
-@unique
-class Decks(Enum):
-    def __new__(cls, shortname: str, label: str, longname: str, global_d=True):
-        obj = object.__new__(cls)
-        obj._value_ = shortname
-        obj.shortname = shortname  # type: ignore
-        obj.label = label  # type: ignore
-        obj.longname = longname  # type: ignore
-        if global_d:
-            cls.global_decks = cls.__dict__.get("global_decks", [])
-            cls.global_decks.append(obj)
-        return obj
-
-    DEFAULT = ("default", "Default", "Default cards")
-    SWISS = ("swiss", "Swiss", "IJJ Swiss cards")
-    PLANET_SCUM = ("planetscum", "Planet Scum", "Planet Scum Custom Cards", False)
-    RIDER_WAITE_SMITH = (
-        "rider-waite-smith",
-        "Rider-Waite-Smith",
-        "Rider-Waite-Smith cards",
-    )
-
-
 DECKS: dict[str, Deck] = {}
-default_tarot_cards: dict[str, Card] = {}
-with open("decks/tarot/default.json", "r") as f:
-    json_cards = json.load(f)
-    for code, card in json_cards.items():
-        default_tarot_cards[code] = Card(
-            card["name"],
-            card["upright_meaning"],
-            card["reversed_meaning"],
-            code,
-            card["image"],
-            card["type"] == "major",
-        )
 
-for deckjson in iglob("decks/tarot/*/deck.json"):
-    with open(deckjson, "r") as f:
-        deck_data = json.load(f)
-        new_cards = copy.deepcopy(default_tarot_cards)
-        if "cards" in deck_data:
-            # override default cards
-            for code, card in deck_data["cards"].items():
-                new_cards[code] = Card(
-                    card.get("name")
-                    or default_tarot_cards[
-                        code
-                    ].name,  # only replace if fields are present (keep defaults otherwise)
-                    card.get("upright_meaning") or default_tarot_cards[code].upright,
-                    card.get("reversed_meaning") or default_tarot_cards[code].reverse,
-                    code,
-                    card.get("image") or default_tarot_cards[code].image_path,
-                    (card.get("type") == "major" or default_tarot_cards[code].major),
-                )
-        for card in new_cards.values():
-            card.image_path = path.join(
-                __file__,
-                "..",
-                "..",
-                "decks",
-                "tarot",
+
+def init_decks():
+    init_tarot()
+    init_playing_cards()
+
+
+def init_tarot():
+    default_tarot_cards: dict[str, Card] = {}
+    with open("decks/tarot/default.json", "r") as f:
+        json_cards = json.load(f)
+        for code, card in json_cards.items():
+            default_tarot_cards[code] = Card(
+                card["name"],
+                card["upright_meaning"],
+                card["reversed_meaning"],
+                code,
+                card["image"],
+                card["type"] == "major",
+            )
+
+    for deckjson in iglob("decks/tarot/*/deck.json"):
+        with open(deckjson, "r") as f:
+            deck_data = json.load(f)
+            new_cards = copy.deepcopy(default_tarot_cards)
+            if "cards" in deck_data:
+                # override default cards
+                for code, card in deck_data["cards"].items():
+                    new_cards[code] = Card(
+                        card.get("name")
+                        or default_tarot_cards[
+                            code
+                        ].name,  # only replace if fields are present (keep defaults otherwise)
+                        card.get("upright_meaning")
+                        or default_tarot_cards[code].upright,
+                        card.get("reversed_meaning")
+                        or default_tarot_cards[code].reverse,
+                        code,
+                        card.get("image") or default_tarot_cards[code].image_path,
+                        (
+                            card.get("type") == "major"
+                            or default_tarot_cards[code].major
+                        ),
+                    )
+            for card in new_cards.values():
+                card.image_path = path.join(
+                    __file__,
+                    "..",
+                    "..",
+                    "decks",
+                    "tarot",
+                    deck_data["shortname"],
+                    card.image_path,
+                )  # add the full path
+
+            new_deck = Deck(
+                deck_data["name"],
+                DeckType.TAROT,
                 deck_data["shortname"],
-                card.image_path,
-            )  # add the full path
+                deck_data["label"],
+                bool(deck_data["global"]),
+                list(new_cards.values()),
+                list(card for card in new_cards.values() if card.major),
+                list(card for card in new_cards.values() if not card.major),
+                deck_data["guilds"] or [],
+            )
+            DECKS[deck_data["shortname"]] = new_deck
 
-        new_deck = Deck(
-            deck_data["name"],
-            deck_data["shortname"],
-            deck_data["label"],
-            bool(deck_data["global"]),
-            list(new_cards.values()),
-            list(card for card in new_cards.values() if card.major),
-            list(card for card in new_cards.values() if not card.major),
-            deck_data["guilds"] or [],
-        )
-        DECKS[deck_data["shortname"]] = new_deck
+
+def init_playing_cards():
+    default_playing_cards: dict[str, Card] = {}
+    with open("decks/playingcards/default.json", "r") as f:
+        json_cards = json.load(f)
+        for code, card in json_cards.items():
+            default_playing_cards[code] = Card(
+                card["name"],
+                card["meaning"],
+                card["meaning"],  # playing cards don't have a reversed description
+                code,
+                card["image"],
+                False,  # treat all playing cards as minor arcana
+            )
+    for deckjson in iglob("decks/playingcards/*/deck.json"):
+        with open(deckjson, "r") as f:
+            deck_data = json.load(f)
+            new_cards = copy.deepcopy(default_playing_cards)
+            if "cards" in deck_data:
+                # override default cards
+                for code, card in deck_data["cards"].items():
+                    new_cards[code] = Card(
+                        card.get("name")
+                        or default_playing_cards[
+                            code
+                        ].name,  # only replace if fields are present (keep defaults otherwise)
+                        card.get("meaning") or default_playing_cards[code].upright,
+                        card.get("reversed_meaning")
+                        or default_playing_cards[code].reverse,
+                        code,
+                        card.get("image") or default_playing_cards[code].image_path,
+                        (
+                            card.get("type") == "major"
+                            or default_playing_cards[code].major
+                        ),
+                    )
+            for card in new_cards.values():
+                card.image_path = path.join(
+                    __file__,
+                    "..",
+                    "..",
+                    "decks",
+                    "playingcards",
+                    deck_data["shortname"],
+                    card.image_path,
+                )  # add the full path
+
+            new_deck = Deck(
+                deck_data["name"],
+                DeckType.PLAYING_CARD,
+                deck_data["shortname"],
+                deck_data["label"],
+                bool(deck_data["global"]),
+                list(new_cards.values()),
+                [],  # playing card decks only have all cards
+                [],  # playing card decks only have all cards
+                deck_data["guilds"] or [],
+            )
+            DECKS[deck_data["shortname"]] = new_deck
 
 
 @unique
@@ -170,7 +227,7 @@ class Facing(Enum):
 
 def draw(
     n: int,
-    chosenDeck: Deck = DECKS["rider-waite-smith"],
+    chosenDeck: str,
     invert=True,
     majorminor: MajorMinor = MajorMinor.BOTH,
 ) -> list[tuple[Card, Facing]]:
@@ -185,13 +242,18 @@ def draw(
         minor_only: If True, only minor arcana cards will be drawn
 
     """
+    deck = DECKS[chosenDeck]
     cards = []
-    if majorminor == MajorMinor.BOTH:
-        cards = chosenDeck.all_cards
-    elif majorminor == MajorMinor.MAJOR_ONLY:
-        cards = chosenDeck.major_cards
-    elif majorminor == MajorMinor.MINOR_ONLY:
-        cards = chosenDeck.minor_cards
+    if deck.type == DeckType.TAROT:
+        if majorminor == MajorMinor.BOTH:
+            cards = deck.all_cards
+        elif majorminor == MajorMinor.MAJOR_ONLY:
+            cards = deck.major_cards
+        elif majorminor == MajorMinor.MINOR_ONLY:
+            cards = deck.minor_cards
+    elif deck.type == DeckType.PLAYING_CARD:
+        cards = deck.all_cards
+        invert = False  # don't invert playing cards
 
     if n < 1 or n > len(cards):
         raise ValueError(f"Number of cards must be between 1 and {len(cards)}")

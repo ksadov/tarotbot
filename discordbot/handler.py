@@ -1,26 +1,14 @@
 import discord
 from io import BytesIO
-from common import tarot
-from common.tarot import Card, ReadingType, DECKS, MajorMinor, Facing
-import shelve
+from common import tarot, eightball
+from common.tarot import Card, ReadingType, MajorMinor, Facing
+import common.db as db
 import os
 from discord.ext.commands import Context
 from discord.ext.pages import Page, Paginator
 from typing import List, Tuple
 
-
-backup = os.path.join(os.path.dirname(__file__), "backup")
 color = discord.Colour(0x6B1BF8)
-READING_DEFAULTS = {
-    "deck": "rider-waite-smith",
-    "majorminor": MajorMinor.BOTH,
-    "text": True,  # card names and descriptions
-    "descriptions": True,  # only shown if text is also true
-    "embed": True,
-    "image": True,
-    "private": False,
-    "invert": True,
-}
 
 
 async def handle(
@@ -30,7 +18,7 @@ async def handle(
 ):
     try:
         opts = get_opts(interaction)
-        await interaction.response.defer(ephemeral=opts["private"])
+        await interaction.response.defer(ephemeral=opts.private)
         messages, files, embeds = build_response(interaction, read, opts, targetUser)
         if len(messages) == 1:
             kwargs: dict = {"content": messages[0]}
@@ -39,7 +27,7 @@ async def handle(
             if len(embeds) > 0:
                 kwargs["embed"] = embeds[0]
             await interaction.followup.send(**kwargs)
-        elif opts["embed"]:
+        elif opts.embed:
             pages: list[Page] = []
             for i in range(0, len(messages)):
                 pages.append(
@@ -49,16 +37,16 @@ async def handle(
                     )
                 )
             paginator = Paginator(pages=pages)
-            await paginator.respond(interaction, ephemeral=opts["private"])
+            await paginator.respond(interaction, ephemeral=opts.private)
         else:
             for i in range(0, len(messages)):
                 if files[i]:
                     await interaction.followup.send(
-                        content=messages[i], file=files[i], ephemeral=opts["private"]
+                        content=messages[i], file=files[i], ephemeral=opts.private
                     )
                 else:
                     await interaction.followup.send(
-                        content=messages[i], ephemeral=opts["private"]
+                        content=messages[i], ephemeral=opts.private
                     )
     except Exception as e:
         print(e)
@@ -75,13 +63,13 @@ def build_response(
     targetUser: discord.Member | None = None,
 ):
     cards = tarot.draw(
-        read.numcards, DECKS[opts["deck"]], opts["invert"], opts["majorminor"]
+        read.numcards, opts.deck, opts.invert, MajorMinor(opts.majorminor)
     )
 
-    MAX_COUNT = 25 if opts["embed"] else 24
+    MAX_COUNT = 25 if opts.embed else 24
     cards = (
         [cards[start : start + MAX_COUNT] for start in range(0, len(cards), MAX_COUNT)]
-        if opts["text"]
+        if opts.text
         else [cards]
     )
 
@@ -104,21 +92,11 @@ def build_response(
 
 
 def get_opts(interaction: discord.Interaction):
-    opts = READING_DEFAULTS
     gid = str(interaction.guild_id)
     if interaction.user is None:
         raise Exception("No user found")
     uid = str(interaction.user.id)
-    with shelve.open(backup, "r") as store:
-        if (
-            interaction.guild_id is not None
-            and gid in store["guilds"]
-            and uid in store["guilds"][gid]["users"]
-        ):
-            opts = store["guilds"][gid]["users"][uid]
-        elif uid in store["users"]:
-            opts = store["users"][uid]
-    return opts
+    return db.get(uid, gid)
 
 
 def message_and_files(
@@ -145,14 +123,16 @@ def message_and_files(
     message = who
     embed = None
 
-    if opts["image"]:
+    if opts.image:
         im = tarot.cardimg(cards, read.imgfunc)
         with BytesIO() as buf:
-            im.save(buf, "PNG")
+            if opts.small_images:
+                im = im.reduce(2)
+            im.save(buf, "PNG", optimize=True)
             buf.seek(0)
             file = discord.File(fp=buf, filename=f"image_{count}.png")
 
-    if opts["embed"]:
+    if opts.embed:
         embed = discord.Embed(
             title="{} reading for {}".format(
                 read.fullname,
@@ -166,17 +146,17 @@ def message_and_files(
             color=color,
         )
 
-        if opts["text"]:
+        if opts.text:
             for i, (n, v) in enumerate(response):
                 embed.add_field(
                     name="{}) {}".format((count * MAX_COUNT) + i + 1, n),
-                    value=v if opts["descriptions"] else "",
+                    value=v if opts.descriptions else "",
                     inline=False,
                 )
-        if opts["image"]:
+        if opts.image:
             embed.set_image(url=f"attachment://image_{count}.png")
     else:
-        if opts["text"]:
+        if opts.text:
             for i, (n, v) in enumerate(response):
                 message = (
                     message
@@ -185,6 +165,65 @@ def message_and_files(
                     + ") "
                     + n
                     + "**"
-                    + ("\n\t" + v if opts["descriptions"] else "")
+                    + ("\n\t" + v if opts.descriptions else "")
                 )
     return message, file, embed
+
+
+async def handle_8ball(
+    interaction,
+    other_user: discord.Member | None = None,
+):
+    try:
+        opts = get_opts(interaction)
+        await interaction.response.defer(ephemeral=opts.private)
+        image, description = eightball.shake()
+        message = (
+            "<@{}>, here is your reading".format(
+                interaction.user.id if other_user is None else other_user.id
+            )
+            + "\n"
+        )
+        file = None
+        embed = None
+        if opts.image:
+            with BytesIO() as buf:
+                image.save(buf, "PNG", optimize=True)
+                buf.seek(0)
+                file = discord.File(fp=buf, filename=f"8ball_image.png")
+
+        if opts.embed:
+            embed = discord.Embed(
+                title="The 8-ball shakes for {}".format(
+                    interaction.user.display_name
+                    if other_user is None
+                    else other_user.display_name
+                ),
+                type="rich",
+                color=color,
+            )
+
+            if opts.text:
+                embed.add_field(
+                    name="{}".format(description),
+                    value="",
+                    inline=False,
+                )
+            if opts.image:
+                embed.set_image(url=f"attachment://8ball_image.png")
+        else:
+            if opts.text:
+                message = message + "\n**" + description
+        kwargs: dict = {
+            "content": message,
+            "file": file,
+            "embed": embed,
+            "ephemeral": opts.private,
+        }
+        await interaction.followup.send(**kwargs)
+    except Exception as e:
+        print(e)
+        await interaction.followup.send(
+            "Error (if you're seeing this, please let us know!): " + str(e),
+            ephemeral=True,
+        )

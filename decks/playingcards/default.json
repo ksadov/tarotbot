@@ -1,0 +1,272 @@
+{
+  "joker1": {
+    "image": "joker1.jpg",
+    "name": "Joker",
+    "meaning": "folly, eccentricity, surprises, beginnings"
+  },
+  "joker2": {
+    "image": "joker2.jpg",
+    "name": "Joker",
+    "meaning": "folly, eccentricity, surprises, beginnings"
+  },
+  "as": {
+    "image": "as.jpg",
+    "name": "Ace of Spades",
+    "meaning": "misfortune, end of a cycle, death"
+  },
+  "2s": {
+    "image": "2s.jpg",
+    "name": "Two of Spades",
+    "meaning": "hard choice, warning of a departure, examination"
+  },
+  "3s": {
+    "image": "3s.jpg",
+    "name": "Three of Spades",
+    "meaning": "bad news, intrusion, temporary blockage"
+  },
+  "4s": {
+    "image": "4s.jpg",
+    "name": "Four of Spades",
+    "meaning": "resolving a crisis, financial anguish, reward through struggle"
+  },
+  "5s": {
+    "image": "5s.jpg",
+    "name": "Five of Spades",
+    "meaning": "temporary resistance, discovery, inner strength"
+  },
+  "6s": {
+    "image": "6s.jpg",
+    "name": "Six of Spades",
+    "meaning": "development, perseverance, create limits"
+  },
+  "7s": {
+    "image": "7s.jpg",
+    "name": "Seven of Spades",
+    "meaning": "hindrance to achievement, change of perspective, imagined loss"
+  },
+  "8s": {
+    "image": "8s.jpg",
+    "name": "Eight of Spades",
+    "meaning": "affliction, intervention required, steady steps for resolution"
+  },
+  "9s": {
+    "image": "9s.jpg",
+    "name": "Nine of Spades",
+    "meaning": "restlessness, left behind, misfortune"
+  },
+  "10s": {
+    "image": "10s.jpg",
+    "name": "Ten of Spades",
+    "meaning": "rock bottom, overwhelm, buried"
+  },
+  "js": {
+    "image": "js.jpg",
+    "name": "Jack of Spades",
+    "meaning": "aggressive young person, toxic individual, rebellious behavior"
+  },
+  "qs": {
+    "image": "qs.jpg",
+    "name": "Queen of Spades",
+    "meaning": "bossy and malicious woman, separated woman, a woman of power"
+  },
+  "ks": {
+    "image": "ks.jpg",
+    "name": "King of Spades",
+    "meaning": "dark determined man, self-absorbed man, a man of power"
+  },
+  "ac": {
+    "image": "ac.jpg",
+    "name": "Ace of Clubs",
+    "meaning": "startling wealth or knowledgee, new prosperity"
+  },
+  "2c": {
+    "image": "2c.jpg",
+    "name": "Two of Clubs",
+    "meaning": "difficulties, conflict with another person, loss of friendship"
+  },
+  "3c": {
+    "image": "3c.jpg",
+    "name": "Three of Clubs",
+    "meaning": "long term proposition, new creativity, another chance"
+  },
+  "4c": {
+    "image": "4c.jpg",
+    "name": "Four of Clubs",
+    "meaning": "draining entourage, unchecked compliance, dishonesty abound"
+  },
+  "5c": {
+    "image": "5c.jpg",
+    "name": "Five of Clubs",
+    "meaning": "new alliances, new habits, act on plans"
+  },
+  "6c": {
+    "image": "6c.jpg",
+    "name": "Six of Clubs",
+    "meaning": "good luck, correct instinct, good balance"
+  },
+  "7c": {
+    "image": "7c.jpg",
+    "name": "Seven of Clubs",
+    "meaning": "unexpected loss in finances, sudden change, waste of resources"
+  },
+  "8c": {
+    "image": "8c.jpg",
+    "name": "Eight of Clubs",
+    "meaning": "contemplation, unfavorable conditions"
+  },
+  "9c": {
+    "image": "9c.jpg",
+    "name": "Nine of Clubs",
+    "meaning": "abrupt fortune, wealth, achievement of goals"
+  },
+  "10c": {
+    "image": "10c.jpg",
+    "name": "Ten of Clubs",
+    "meaning": "legacy and complete success, well-established prosperity"
+  },
+  "jc": {
+    "image": "jc.jpg",
+    "name": "Jack of Clubs",
+    "meaning": "playful young man, admirer, reliable yet inexperienced"
+  },
+  "qc": {
+    "image": "qc.jpg",
+    "name": "Queen of Clubs",
+    "meaning": "well-grounded woman, mature woman, practical"
+  },
+  "kc": {
+    "image": "kc.jpg",
+    "name": "King of Clubs",
+    "meaning": "experienced man, generous man, high spirits"
+  },
+  "ah": {
+    "image": "ah.jpg",
+    "name": "Ace of Hearts",
+    "meaning": "understand your desire, newfound happiness, emotional attainment"
+  },
+  "2h": {
+    "image": "2h.jpg",
+    "name": "Two of Hearts",
+    "meaning": "new partnership, emotional connection, happy balance"
+  },
+  "3h": {
+    "image": "3h.jpg",
+    "name": "Three of Hearts",
+    "meaning": "social engagement, expanding partnerships, uncertain emotions"
+  },
+  "4h": {
+    "image": "4h.jpg",
+    "name": "Four of Hearts",
+    "meaning": "strong emotional foundation, appropriate change"
+  },
+  "5h": {
+    "image": "5h.jpg",
+    "name": "Five of Hearts",
+    "meaning": "emotional crossroads, jealousy in close company, potential disturbance"
+  },
+  "6h": {
+    "image": "6h.jpg",
+    "name": "Six of Hearts",
+    "meaning": "teamwork, good fortune, someone is interested in you"
+  },
+  "7h": {
+    "image": "7h.jpg",
+    "name": "Seven of Hearts",
+    "meaning": "uncertainty with relationships, unreliable friends, unpredictable"
+  },
+  "8h": {
+    "image": "8h.jpg",
+    "name": "Eight of Hearts",
+    "meaning": "strong union, abrupt gift, unexpected opportunity"
+  },
+  "9h": {
+    "image": "9h.jpg",
+    "name": "Nine of Hearts",
+    "meaning": "fulfillment, content relationships, expanding relationships"
+  },
+  "10h": {
+    "image": "10h.jpg",
+    "name": "Ten of Hearts",
+    "meaning": "success through hard work, good fortune, completion"
+  },
+  "jh": {
+    "image": "jh.jpg",
+    "name": "Jack of Hearts",
+    "meaning": "innocent and sweet young man, admirer, naive and impetuous"
+  },
+  "qh": {
+    "image": "qh.jpg",
+    "name": "Queen of Hearts",
+    "meaning": "caring woman, maternal role, warm guidance"
+  },
+  "kh": {
+    "image": "kh.jpg",
+    "name": "King of Hearts",
+    "meaning": "caring man, fair and helpful male figure, affectionate man"
+  },
+  "ad": {
+    "image": "ad.jpg",
+    "name": "Ace of Diamonds",
+    "meaning": "future news, new beginnings, material opportunities"
+  },
+  "2d": {
+    "image": "2d.jpg",
+    "name": "Two of Diamonds",
+    "meaning": "the juggler of opportunity, synchronization, positive direction"
+  },
+  "3d": {
+    "image": "3d.jpg",
+    "name": "Three of Diamonds",
+    "meaning": "money negation, avoid group animosity, tactful monetary boundaries"
+  },
+  "4d": {
+    "image": "4d.jpg",
+    "name": "Four of Diamonds",
+    "meaning": "lock-box for money, sage advice, financial growth"
+  },
+  "5d": {
+    "image": "5d.jpg",
+    "name": "Five of Diamonds",
+    "meaning": "new enterprise, financial development, realization of success"
+  },
+  "6d": {
+    "image": "6d.jpg",
+    "name": "Six of Diamonds",
+    "meaning": "disengagement, partitions, boundaries"
+  },
+  "7d": {
+    "image": "7d.jpg",
+    "name": "Seven of Diamonds",
+    "meaning": "progress through adversity, good investment choice"
+  },
+  "8d": {
+    "image": "8d.jpg",
+    "name": "Eight of Diamonds",
+    "meaning": "new opportunity through craftsmanship, an announcement for work"
+  },
+  "9d": {
+    "image": "9d.jpg",
+    "name": "Nine of Diamonds",
+    "meaning": "preparing for harvest, conservative success"
+  },
+  "10d": {
+    "image": "10d.jpg",
+    "name": "Ten of Diamonds",
+    "meaning": "reaping the rewards, household richness, hard work paying off"
+  },
+  "jd": {
+    "image": "jd.jpg",
+    "name": "Jack of Diamonds",
+    "meaning": "envious young man who brings news, deceptive person"
+  },
+  "qd": {
+    "image": "qd.jpg",
+    "name": "Queen of Diamonds",
+    "meaning": "charismatic woman, a rich woman entering your life"
+  },
+  "kd": {
+    "image": "kd.jpg",
+    "name": "King of Diamonds",
+    "meaning": "authoritative man, high status or influence, possible risky business"
+  }
+}

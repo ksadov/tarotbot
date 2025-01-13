@@ -1,0 +1,172 @@
+{
+  "name": "Distant Early Warning playing cards",
+  "shortname": "distantearlywarning",
+  "label": "Distant Early Warning",
+  "type": "playingcards",
+  "global": true,
+  "guilds": [],
+  "cards": {
+    "joker1": {
+      "meaning": ""
+    },
+    "joker2": {
+      "meaning": ""
+    },
+    "as": {
+      "meaning": ""
+    },
+    "2s": {
+      "meaning": ""
+    },
+    "3s": {
+      "meaning": ""
+    },
+    "4s": {
+      "meaning": ""
+    },
+    "5s": {
+      "meaning": ""
+    },
+    "6s": {
+      "meaning": ""
+    },
+    "7s": {
+      "meaning": ""
+    },
+    "8s": {
+      "meaning": ""
+    },
+    "9s": {
+      "meaning": ""
+    },
+    "10s": {
+      "meaning": ""
+    },
+    "js": {
+      "meaning": ""
+    },
+    "qs": {
+      "meaning": ""
+    },
+    "ks": {
+      "meaning": ""
+    },
+    "ac": {
+      "meaning": ""
+    },
+    "2c": {
+      "meaning": ""
+    },
+    "3c": {
+      "meaning": ""
+    },
+    "4c": {
+      "meaning": ""
+    },
+    "5c": {
+      "meaning": ""
+    },
+    "6c": {
+      "meaning": ""
+    },
+    "7c": {
+      "meaning": ""
+    },
+    "8c": {
+      "meaning": ""
+    },
+    "9c": {
+      "meaning": ""
+    },
+    "10c": {
+      "meaning": ""
+    },
+    "jc": {
+      "meaning": ""
+    },
+    "qc": {
+      "meaning": ""
+    },
+    "kc": {
+      "meaning": ""
+    },
+    "ah": {
+      "meaning": ""
+    },
+    "2h": {
+      "meaning": ""
+    },
+    "3h": {
+      "meaning": ""
+    },
+    "4h": {
+      "meaning": ""
+    },
+    "5h": {
+      "meaning": ""
+    },
+    "6h": {
+      "meaning": ""
+    },
+    "7h": {
+      "meaning": ""
+    },
+    "8h": {
+      "meaning": ""
+    },
+    "9h": {
+      "meaning": ""
+    },
+    "10h": {
+      "meaning": ""
+    },
+    "jh": {
+      "meaning": ""
+    },
+    "qh": {
+      "meaning": ""
+    },
+    "kh": {
+      "meaning": ""
+    },
+    "ad": {
+      "meaning": ""
+    },
+    "2d": {
+      "meaning": ""
+    },
+    "3d": {
+      "meaning": ""
+    },
+    "4d": {
+      "meaning": ""
+    },
+    "5d": {
+      "meaning": ""
+    },
+    "6d": {
+      "meaning": ""
+    },
+    "7d": {
+      "meaning": ""
+    },
+    "8d": {
+      "meaning": ""
+    },
+    "9d": {
+      "meaning": ""
+    },
+    "10d": {
+      "meaning": ""
+    },
+    "jd": {
+      "meaning": ""
+    },
+    "qd": {
+      "meaning": ""
+    },
+    "kd": {
+      "meaning": ""
+    }
+  }
+}

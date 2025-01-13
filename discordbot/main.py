@@ -1,9 +1,17 @@
 import os
-from common.tarot import SIMPLE_READINGS, NCardR, ReadingType, OneCardR
+from common.tarot import (
+    SIMPLE_READINGS,
+    NCardR,
+    ReadingType,
+    OneCardR,
+    ThreeCardR,
+    init_decks,
+)
 from dotenv import load_dotenv
 import discord
 from discordbot.components import ReadingSelectorView, AboutView, SettingsView
-from discordbot.handler import handle
+from discordbot.handler import handle, handle_8ball
+import common.db as db
 
 # TODO update this
 help_message = """For support or to request new features, join our discord server. Feedback welcome!\n
@@ -60,9 +68,16 @@ async def _tarot(ctx: discord.ApplicationContext):
     )
 
 
+# this shows up when right clicking a user
 @bot.user_command(name="One Card Tarot Reading", guild_ids=guild_ids)
-async def _tarot_user(ctx: discord.ApplicationContext, member: discord.Member):
+async def _tarot_user_1carrd(ctx: discord.ApplicationContext, member: discord.Member):
     await handle(ctx.interaction, OneCardR, member)
+
+
+# this shows up when right clicking a user
+@bot.user_command(name="Three Card Tarot Reading", guild_ids=guild_ids)
+async def _tarot_user_3card(ctx: discord.ApplicationContext, member: discord.Member):
+    await handle(ctx.interaction, ThreeCardR, member)
 
 
 @bot.slash_command(
@@ -128,6 +143,24 @@ async def _pull(ctx, numcards: int):
     await handle(ctx.interaction, NCardR(numcards))
 
 
+# TODO: enable when 8ball images are in
+# @bot.slash_command(
+#     name="8ball",
+#     description="Shake the magic 8 ball",
+#     guild_ids=guild_ids,
+#     integration_types=(
+#         {
+#             discord.IntegrationType.guild_install,
+#             discord.IntegrationType.user_install,
+#         }
+#         if guild_ids is None
+#         else None
+#     ),
+# )
+# async def _shake(ctx):
+#     await handle_8ball(ctx.interaction)
+
+
 def addCommand(t: ReadingType):
     @bot.slash_command(
         name=t.id,
@@ -151,8 +184,12 @@ for t in SIMPLE_READINGS:
     help_message += "/{}: {}\n".format(t.id, t.description)
 help_message += "/pull [n]: Draw [n] cards\n\n"
 
+help_message += "playing card meanings from https://pathandtarot.com/playing-card-meanings-for-cartomancy/\n\n"
+
 
 def main():
+    db.init()
+    init_decks()
     bot.run(token)
 
 
@@ -160,11 +197,9 @@ if __name__ == "__main__":
     main()
 
 
-# TODO: Add optional text input
+# TODO:
+# switch shelve to sql (port backup data)
+# add pooling to sql
 # info about tarot cards and meanings
-# playing cards
 # oracle cards
-# make uploading large images faster
-#   maybe add option to reduce image size
-# add as right click option on users
 # add as right click option on messages (as the question)
