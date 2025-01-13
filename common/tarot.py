@@ -129,8 +129,7 @@ def init_tarot():
                     )
             for card in new_cards.values():
                 card.image_path = path.join(
-                    __file__,
-                    "..",
+                    path.dirname(path.abspath(__file__)),
                     "..",
                     "decks",
                     "tarot",
@@ -189,8 +188,7 @@ def init_playing_cards():
                     )
             for card in new_cards.values():
                 card.image_path = path.join(
-                    __file__,
-                    "..",
+                    path.dirname(path.abspath(__file__)),
                     "..",
                     "decks",
                     "playingcards",
