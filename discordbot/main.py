@@ -198,7 +198,7 @@ def addCommand(t: ReadingType):
 for t in SIMPLE_READINGS:
     addCommand(t)
     help_message += "/{}: {}\n".format(t.id, t.description)
-help_message += "/pull [n]: Draw [n] cards\n\n"
+help_message += "/pull [n]: Draw [n] cards\n/oblique: Get inspiration from Oblique Strategies\n\n"
 
 help_message += "playing card meanings from https://pathandtarot.com/playing-card-meanings-for-cartomancy/\n\n"
 
