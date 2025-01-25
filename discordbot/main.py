@@ -10,7 +10,7 @@ from common.tarot import (
 from dotenv import load_dotenv
 import discord
 from discordbot.components import ReadingSelectorView, AboutView, SettingsView
-from discordbot.handler import handle, handle_8ball
+from discordbot.handler import handle, handle_8ball, handle_oblique
 import common.db as db
 
 # TODO update this
@@ -159,6 +159,22 @@ async def _pull(ctx, numcards: int):
 # )
 # async def _shake(ctx):
 #     await handle_8ball(ctx.interaction)
+
+@bot.slash_command(
+    name="oblique",
+    description="Get some inspiration from the Oblique Strategies",
+    guild_ids=guild_ids,
+    integration_types=(
+        {
+            discord.IntegrationType.guild_install,
+            discord.IntegrationType.user_install,
+        }
+        if guild_ids is None
+        else None
+    ),
+)
+async def _oblique(ctx):
+    await handle_oblique(ctx.interaction)
 
 
 def addCommand(t: ReadingType):

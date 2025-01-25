@@ -9,3 +9,4 @@ backup.db
 backup
 *~
 discordbot/backup.*
+settings.db

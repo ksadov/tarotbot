@@ -1,6 +1,6 @@
 import discord
 from io import BytesIO
-from common import tarot, eightball
+from common import tarot, eightball, oblique_strategies
 from common.tarot import Card, ReadingType, MajorMinor, Facing
 import common.db as db
 import os
@@ -217,6 +217,52 @@ async def handle_8ball(
         kwargs: dict = {
             "content": message,
             "file": file,
+            "embed": embed,
+            "ephemeral": opts.private,
+        }
+        await interaction.followup.send(**kwargs)
+    except Exception as e:
+        print(e)
+        await interaction.followup.send(
+            "Error (if you're seeing this, please let us know!): " + str(e),
+            ephemeral=True,
+        )
+
+
+async def handle_oblique(
+    interaction,
+    other_user: discord.Member | None = None,
+):
+    try:
+        opts = get_opts(interaction)
+        await interaction.response.defer(ephemeral=opts.private)
+        strategy = oblique_strategies.oblique()
+        message = (
+            "<@{}>, here is your reading".format(
+                interaction.user.id if other_user is None else other_user.id
+            )
+            + "\n"
+        )
+        embed = None
+        if opts.embed:
+            embed = discord.Embed(
+                title="An Oblique Strategy for {}".format(
+                    interaction.user.display_name
+                    if other_user is None
+                    else other_user.display_name
+                ),
+                type="rich",
+                color=color,
+            )
+            embed.add_field(
+                name="{}".format(strategy),
+                value="",
+                inline=False,
+            )
+        else:
+            message = message + "\n" + strategy
+        kwargs: dict = {
+            "content": message,
             "embed": embed,
             "ephemeral": opts.private,
         }
