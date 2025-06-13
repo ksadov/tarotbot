@@ -1,0 +1,9 @@
+{
+  "name": "ETC cards",
+  "shortname": "etc",
+  "label": "ETC",
+  "type": "tarot",
+  "global": true,
+  "guilds": [],
+  "cards": {}
+}
