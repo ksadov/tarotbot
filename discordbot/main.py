@@ -10,13 +10,20 @@ from common.tarot import (
 from dotenv import load_dotenv
 import discord
 from discordbot.components import ReadingSelectorView, AboutView, SettingsView
-from discordbot.handler import handle, handle_8ball, handle_oblique
+from discordbot.handler import (
+    handle,
+    handle_8ball,
+    handle_oblique,
+    autocomplete_info,
+    handle_info,
+)
 import common.db as db
 
 # TODO update this
 help_message = """For support or to request new features, join our discord server. Feedback welcome!\n
 Available commands:\n
 /tarot: start a reading
+/info [card name]: get details about specific cards
 /tarotsettings: customize your readings
 /tarothelp: view this help\n
 """
@@ -66,6 +73,28 @@ async def _tarot(ctx: discord.ApplicationContext):
         view=ReadingSelectorView(),
         ephemeral=True,
     )
+
+
+# we have to use autocomplete instead of choices because of the 25 choice limit
+@bot.slash_command(
+    name="info",
+    description="Learn about a card",
+    guild_ids=guild_ids,
+    integration_types=(
+        {
+            discord.IntegrationType.guild_install,
+            discord.IntegrationType.user_install,
+        }
+        if guild_ids is None
+        else None  # User install options don't work in testing context
+    ),
+)
+@discord.option("card", str, autocomplete=autocomplete_info)
+async def _info(
+    ctx: discord.ApplicationContext,
+    card: str,
+):
+    await handle_info(ctx.interaction, card)
 
 
 # this shows up when right clicking a user
@@ -160,6 +189,7 @@ async def _pull(ctx, numcards: int):
 # async def _shake(ctx):
 #     await handle_8ball(ctx.interaction)
 
+
 @bot.slash_command(
     name="oblique",
     description="Get some inspiration from the Oblique Strategies",
@@ -198,7 +228,9 @@ def addCommand(t: ReadingType):
 for t in SIMPLE_READINGS:
     addCommand(t)
     help_message += "/{}: {}\n".format(t.id, t.description)
-help_message += "/pull [n]: Draw [n] cards\n/oblique: Get inspiration from Oblique Strategies\n\n"
+help_message += (
+    "/pull [n]: Draw [n] cards\n/oblique: Get inspiration from Oblique Strategies\n\n"
+)
 
 help_message += "playing card meanings from https://pathandtarot.com/playing-card-meanings-for-cartomancy/\n\n"
 
@@ -214,8 +246,6 @@ if __name__ == "__main__":
 
 
 # TODO:
-# switch shelve to sql (port backup data)
 # add pooling to sql
-# info about tarot cards and meanings
 # oracle cards
 # add as right click option on messages (as the question)

@@ -4,545 +4,701 @@
     "name": "The World",
     "type": "major",
     "upright_meaning": "fulfillment, harmony, completion",
-    "reversed_meaning": "incompletion, no closure"
+    "reversed_meaning": "incompletion, no closure",
+    "suit": "Majors",
+    "rank": "21"
   },
   "20M": {
     "image": "20M.jpg",
     "name": "Judgement",
     "type": "major",
     "upright_meaning": "reflection, reckoning, awakening",
-    "reversed_meaning": "lack of self awareness, doubt, self loathing"
+    "reversed_meaning": "lack of self awareness, doubt, self loathing",
+    "suit": "Majors",
+    "rank": "20"
   },
   "19M": {
     "image": "19M.jpg",
     "name": "The Sun",
     "type": "major",
     "upright_meaning": "joy, success, celebration, positivity",
-    "reversed_meaning": "negativity, depression, sadness"
+    "reversed_meaning": "negativity, depression, sadness",
+    "suit": "Majors",
+    "rank": "19"
   },
   "18M": {
     "image": "18M.jpg",
     "name": "The Moon",
     "type": "major",
     "upright_meaning": "unconscious, illusions, intuition",
-    "reversed_meaning": "confusion, fear, misinterpretation"
+    "reversed_meaning": "confusion, fear, misinterpretation",
+    "suit": "Majors",
+    "rank": "18"
   },
   "17M": {
     "image": "17M.jpg",
     "name": "The Star",
     "type": "major",
     "upright_meaning": "hope, faith, rejuvenation",
-    "reversed_meaning": "faithlessness, discouragement, insecurity"
+    "reversed_meaning": "faithlessness, discouragement, insecurity",
+    "suit": "Majors",
+    "rank": "17"
   },
   "16M": {
     "image": "16M.jpg",
     "name": "The Tower",
     "type": "major",
     "upright_meaning": "sudden upheaval, broken pride, disaster",
-    "reversed_meaning": "disaster avoided, delayed disaster, fear of suffering"
+    "reversed_meaning": "disaster avoided, delayed disaster, fear of suffering",
+    "suit": "Majors",
+    "rank": "16"
   },
   "15M": {
     "image": "15M.jpg",
     "name": "The Devil",
     "type": "major",
     "upright_meaning": "addiction, materialism, playfulness",
-    "reversed_meaning": "freedom, release, restoring control"
+    "reversed_meaning": "freedom, release, restoring control",
+    "suit": "Majors",
+    "rank": "15"
   },
   "14M": {
     "image": "14M.jpg",
     "name": "Temperance",
     "type": "major",
     "upright_meaning": "middle path, patience, finding meaning",
-    "reversed_meaning": "extremes, excess, lack of balance"
+    "reversed_meaning": "extremes, excess, lack of balance",
+    "suit": "Majors",
+    "rank": "14"
   },
   "13M": {
     "image": "13M.jpg",
     "name": "Death",
     "type": "major",
     "upright_meaning": "end of cycle, beginnings, change, metamorphosis",
-    "reversed_meaning": "fear of change, holding on, stagnation, decay"
+    "reversed_meaning": "fear of change, holding on, stagnation, decay",
+    "suit": "Majors",
+    "rank": "13"
   },
   "12M": {
     "image": "12M.jpg",
     "name": "The Hanged Man",
     "type": "major",
     "upright_meaning": "sacrifice, release, martyrdom",
-    "reversed_meaning": "stalling, needless sacrifice, fear of sacrifice"
+    "reversed_meaning": "stalling, needless sacrifice, fear of sacrifice",
+    "suit": "Majors",
+    "rank": "12"
   },
   "11M": {
     "image": "11M.jpg",
     "name": "Justice",
     "type": "major",
     "upright_meaning": "cause and effect, clarity, truth",
-    "reversed_meaning": "dishonesty, unaccountability, unfairness"
+    "reversed_meaning": "dishonesty, unaccountability, unfairness",
+    "suit": "Majors",
+    "rank": "11"
   },
   "10M": {
     "image": "10M.jpg",
     "name": "The Wheel of Fortune",
     "type": "major",
     "upright_meaning": "change, cycles, inevitable fate",
-    "reversed_meaning": "no control, clinging to control, bad luck"
+    "reversed_meaning": "no control, clinging to control, bad luck",
+    "suit": "Majors",
+    "rank": "10"
   },
   "9M": {
     "image": "9M.jpg",
     "name": "The Hermit",
     "type": "major",
     "upright_meaning": "contemplation, search for truth, inner guidance",
-    "reversed_meaning": "loneliness, isolation, lost your way"
+    "reversed_meaning": "loneliness, isolation, lost your way",
+    "suit": "Majors",
+    "rank": "9"
   },
   "8M": {
     "image": "8M.jpg",
     "name": "Strength",
     "type": "major",
     "upright_meaning": "inner strength, bravery, compassion, focus",
-    "reversed_meaning": "self doubt, weakness, insecurity"
+    "reversed_meaning": "self doubt, weakness, insecurity",
+    "suit": "Majors",
+    "rank": "8"
   },
   "7M": {
     "image": "7M.jpg",
     "name": "The Chariot",
     "type": "major",
     "upright_meaning": "direction, control, willpower",
-    "reversed_meaning": "lack of control, lack of direction, aggression"
+    "reversed_meaning": "lack of control, lack of direction, aggression",
+    "suit": "Majors",
+    "rank": "7"
   },
   "6M": {
     "image": "6M.jpg",
     "name": "The Lovers",
     "type": "major",
     "upright_meaning": "partnerships, duality, union",
-    "reversed_meaning": "loss of balance, one-sidedness, disharmony"
+    "reversed_meaning": "loss of balance, one-sidedness, disharmony",
+    "suit": "Majors",
+    "rank": "6"
   },
   "5M": {
     "image": "5M.jpg",
     "name": "The Hierophant",
     "type": "major",
     "upright_meaning": "tradition, conformity, morality, ethics",
-    "reversed_meaning": "rebellion, subversiveness, new approaches"
+    "reversed_meaning": "rebellion, subversiveness, new approaches",
+    "suit": "Majors",
+    "rank": "5"
   },
   "4M": {
     "image": "4M.jpg",
     "name": "The Emperor",
     "type": "major",
     "upright_meaning": "authority, structure, control, fatherhood",
-    "reversed_meaning": "tyranny, rigidity, coldness"
+    "reversed_meaning": "tyranny, rigidity, coldness",
+    "suit": "Majors",
+    "rank": "4"
   },
   "3M": {
     "image": "3M.jpg",
     "name": "The Empress",
     "type": "major",
     "upright_meaning": "motherhood, fertility, nature",
-    "reversed_meaning": "dependence, smothering, emptiness, nosiness"
+    "reversed_meaning": "dependence, smothering, emptiness, nosiness",
+    "suit": "Majors",
+    "rank": "3"
   },
   "2M": {
     "image": "2M.jpg",
     "name": "The High Priestess",
     "type": "major",
     "upright_meaning": "intuitive, unconscious, inner voice",
-    "reversed_meaning": "lack of center, lost inner voice, repressed feelings"
+    "reversed_meaning": "lack of center, lost inner voice, repressed feelings",
+    "suit": "Majors",
+    "rank": "2"
   },
   "1M": {
     "image": "1M.jpg",
     "name": "The Magician",
     "type": "major",
     "upright_meaning": "willpower, desire, creation, manifestation",
-    "reversed_meaning": "trickery, illusions, out of touch"
+    "reversed_meaning": "trickery, illusions, out of touch",
+    "suit": "Majors",
+    "rank": "1"
   },
   "0M": {
     "image": "0M.jpg",
     "name": "The Fool",
     "type": "major",
     "upright_meaning": "innocence, new beginnings, free spirit",
-    "reversed_meaning": "recklessness, taken advantage of, inconsideration"
+    "reversed_meaning": "recklessness, taken advantage of, inconsideration",
+    "suit": "Majors",
+    "rank": "0"
   },
   "KW": {
     "image": "KW.jpg",
     "name": "King of Wands",
     "type": "minor",
     "upright_meaning": "big picture, leader, overcoming challenges",
-    "reversed_meaning": "impulsive, overbearing, unachievable expectations"
+    "reversed_meaning": "impulsive, overbearing, unachievable expectations",
+    "suit": "Wands",
+    "rank": "King"
   },
   "QW": {
     "image": "QW.jpg",
     "name": "Queen of Wands",
     "type": "minor",
     "upright_meaning": "courage, determination, joy",
-    "reversed_meaning": "selfishness, jealousy, insecurities"
+    "reversed_meaning": "selfishness, jealousy, insecurities",
+    "suit": "Wands",
+    "rank": "Queen"
   },
   "KNW": {
     "image": "KNW.jpg",
     "name": "Knight of Wands",
     "type": "minor",
     "upright_meaning": "action, adventure, fearlessness",
-    "reversed_meaning": "anger, impulsiveness, recklessness"
+    "reversed_meaning": "anger, impulsiveness, recklessness",
+    "suit": "Wands",
+    "rank": "Knight"
   },
   "PW": {
     "image": "PW.jpg",
     "name": "Page of Wands",
     "type": "minor",
     "upright_meaning": "exploration, excitement, freedom",
-    "reversed_meaning": "lack of direction, procrastination, creating conflict"
+    "reversed_meaning": "lack of direction, procrastination, creating conflict",
+    "suit": "Wands",
+    "rank": "Page"
   },
   "10W": {
     "image": "10W.jpg",
     "name": "Ten of Wands",
     "type": "minor",
     "upright_meaning": "accomplishment, responsibility, burden",
-    "reversed_meaning": "inability to delegate, overstressed, burnt out"
+    "reversed_meaning": "inability to delegate, overstressed, burnt out",
+    "suit": "Wands",
+    "rank": "10"
   },
   "9W": {
     "image": "9W.jpg",
     "name": "Nine of Wands",
     "type": "minor",
     "upright_meaning": "resilience, grit, last stand",
-    "reversed_meaning": "exhaustion, fatigue, questioning motivations"
+    "reversed_meaning": "exhaustion, fatigue, questioning motivations",
+    "suit": "Wands",
+    "rank": "9"
   },
   "8W": {
     "image": "8W.jpg",
     "name": "Eight of Wands",
     "type": "minor",
     "upright_meaning": "rapid action, movement, quick decisions",
-    "reversed_meaning": "panic, waiting, slowdown"
+    "reversed_meaning": "panic, waiting, slowdown",
+    "suit": "Wands",
+    "rank": "8"
   },
   "7W": {
     "image": "7W.jpg",
     "name": "Seven of Wands",
     "type": "minor",
     "upright_meaning": "perseverance, defensive, maintaining control",
-    "reversed_meaning": "give up, destroyed confidence, overwhelmed"
+    "reversed_meaning": "give up, destroyed confidence, overwhelmed",
+    "suit": "Wands",
+    "rank": "7"
   },
   "6W": {
     "image": "6W.jpg",
     "name": "Six of Wands",
     "type": "minor",
     "upright_meaning": "victory, success, public reward",
-    "reversed_meaning": "excess pride, lack of recognition, punishment"
+    "reversed_meaning": "excess pride, lack of recognition, punishment",
+    "suit": "Wands",
+    "rank": "6"
   },
   "5W": {
     "image": "5W.jpg",
     "name": "Five of Wands",
     "type": "minor",
     "upright_meaning": "competition, rivalry, conflict",
-    "reversed_meaning": "avoiding conflict, respecting differences"
+    "reversed_meaning": "avoiding conflict, respecting differences",
+    "suit": "Wands",
+    "rank": "5"
   },
   "4W": {
     "image": "4W.jpg",
     "name": "Four of Wands",
     "type": "minor",
     "upright_meaning": "community, home, celebration",
-    "reversed_meaning": "lack of support, transience, home conflicts"
+    "reversed_meaning": "lack of support, transience, home conflicts",
+    "suit": "Wands",
+    "rank": "4"
   },
   "3W": {
     "image": "3W.jpg",
     "name": "Three of Wands",
     "type": "minor",
     "upright_meaning": "looking ahead, expansion, rapid growth",
-    "reversed_meaning": "obstacles, delays, frustration"
+    "reversed_meaning": "obstacles, delays, frustration",
+    "suit": "Wands",
+    "rank": "3"
   },
   "2W": {
     "image": "2W.jpg",
     "name": "Two of Wands",
     "type": "minor",
     "upright_meaning": "planning, making decisions, leaving home",
-    "reversed_meaning": "fear of change, playing safe, bad planning"
+    "reversed_meaning": "fear of change, playing safe, bad planning",
+    "suit": "Wands",
+    "rank": "2"
   },
   "AW": {
     "image": "AW.jpg",
     "name": "Ace of Wands",
     "type": "minor",
     "upright_meaning": "creation, willpower, inspiration, desire",
-    "reversed_meaning": "lack of energy, lack of passion, boredom"
+    "reversed_meaning": "lack of energy, lack of passion, boredom",
+    "suit": "Wands",
+    "rank": "Ace"
   },
   "KC": {
     "image": "KC.jpg",
     "name": "King of Cups",
     "type": "minor",
     "upright_meaning": "compassion, control, balance",
-    "reversed_meaning": "coldness, moodiness, bad advice"
+    "reversed_meaning": "coldness, moodiness, bad advice",
+    "suit": "Cups",
+    "rank": "King"
   },
   "QC": {
     "image": "QC.jpg",
     "name": "Queen of Cups",
     "type": "minor",
     "upright_meaning": "compassion, calm, comfort",
-    "reversed_meaning": "martyrdom, insecurity, dependence"
+    "reversed_meaning": "martyrdom, insecurity, dependence",
+    "suit": "Cups",
+    "rank": "Queen"
   },
   "KNC": {
     "image": "KNC.jpg",
     "name": "Knight of Cups",
     "type": "minor",
     "upright_meaning": "following the heart, idealist, romantic",
-    "reversed_meaning": "moodiness, disappointment"
+    "reversed_meaning": "moodiness, disappointment",
+    "suit": "Cups",
+    "rank": "Knight"
   },
   "PC": {
     "image": "PC.jpg",
     "name": "Page of Cups",
     "type": "minor",
     "upright_meaning": "happy surprise, dreamer, sensitivity",
-    "reversed_meaning": "emotional immaturity, insecurity, disappointment"
+    "reversed_meaning": "emotional immaturity, insecurity, disappointment",
+    "suit": "Cups",
+    "rank": "Page"
   },
   "10C": {
     "image": "10C.jpg",
     "name": "Ten of Cups",
     "type": "minor",
     "upright_meaning": "inner happiness, fulfillment, dreams coming true",
-    "reversed_meaning": "shattered dreams, broken family, domestic disharmony"
+    "reversed_meaning": "shattered dreams, broken family, domestic disharmony",
+    "suit": "Cups",
+    "rank": "10"
   },
   "9C": {
     "image": "9C.jpg",
     "name": "Nine of Cups",
     "type": "minor",
     "upright_meaning": "satisfaction, emotional stability, luxury",
-    "reversed_meaning": "lack of inner joy, smugness, dissatisfaction"
+    "reversed_meaning": "lack of inner joy, smugness, dissatisfaction",
+    "suit": "Cups",
+    "rank": "9"
   },
   "8C": {
     "image": "8C.jpg",
     "name": "Eight of Cups",
     "type": "minor",
     "upright_meaning": "walking away, disillusionment, leaving behind",
-    "reversed_meaning": "avoidance, fear of change, fear of loss"
+    "reversed_meaning": "avoidance, fear of change, fear of loss",
+    "suit": "Cups",
+    "rank": "8"
   },
   "7C": {
     "image": "7C.jpg",
     "name": "Seven of Cups",
     "type": "minor",
     "upright_meaning": "searching for purpose, choices, daydreaming",
-    "reversed_meaning": "lack of purpose, diversion, confusion"
+    "reversed_meaning": "lack of purpose, diversion, confusion",
+    "suit": "Cups",
+    "rank": "7"
   },
   "6C": {
     "image": "6C.jpg",
     "name": "Six of Cups",
     "type": "minor",
     "upright_meaning": "familiarity, happy memories, healing",
-    "reversed_meaning": "moving forward, leaving home, independence"
+    "reversed_meaning": "moving forward, leaving home, independence",
+    "suit": "Cups",
+    "rank": "6"
   },
   "5C": {
     "image": "5C.jpg",
     "name": "Five of Cups",
     "type": "minor",
     "upright_meaning": "loss, grief, self-pity",
-    "reversed_meaning": "acceptance, moving on, finding peace"
+    "reversed_meaning": "acceptance, moving on, finding peace",
+    "suit": "Cups",
+    "rank": "5"
   },
   "4C": {
     "image": "4C.jpg",
     "name": "Four of Cups",
     "type": "minor",
     "upright_meaning": "apathy, contemplation, disconnectedness",
-    "reversed_meaning": "sudden awareness, choosing happiness, acceptance"
+    "reversed_meaning": "sudden awareness, choosing happiness, acceptance",
+    "suit": "Cups",
+    "rank": "4"
   },
   "3C": {
     "image": "3C.jpg",
     "name": "Three of Cups",
     "type": "minor",
     "upright_meaning": "friendship, community, happiness",
-    "reversed_meaning": "overindulgence, gossip, isolation"
+    "reversed_meaning": "overindulgence, gossip, isolation",
+    "suit": "Cups",
+    "rank": "3"
   },
   "2C": {
     "image": "2C.jpg",
     "name": "Two of Cups",
     "type": "minor",
     "upright_meaning": "unity, partnership, connection",
-    "reversed_meaning": "imbalance, broken communication, tension"
+    "reversed_meaning": "imbalance, broken communication, tension",
+    "suit": "Cups",
+    "rank": "2"
   },
   "AC": {
     "image": "AC.jpg",
     "name": "Ace of Cups",
     "type": "minor",
     "upright_meaning": "new feelings, spirituality, intuition",
-    "reversed_meaning": "emotional loss, blocked creativity, emptiness"
+    "reversed_meaning": "emotional loss, blocked creativity, emptiness",
+    "suit": "Cups",
+    "rank": "Ace"
   },
   "KS": {
     "image": "KS.jpg",
     "name": "King of Swords",
     "type": "minor",
     "upright_meaning": "head over heart, discipline, truth",
-    "reversed_meaning": "manipulative, cruel, weakness"
+    "reversed_meaning": "manipulative, cruel, weakness",
+    "suit": "Swords",
+    "rank": "King"
   },
   "QS": {
     "image": "QS.jpg",
     "name": "Queen of Swords",
     "type": "minor",
     "upright_meaning": "complexity, perceptiveness, clear mindedness",
-    "reversed_meaning": "cold hearted, cruel, bitterness"
+    "reversed_meaning": "cold hearted, cruel, bitterness",
+    "suit": "Swords",
+    "rank": "Queen"
   },
   "KNS": {
     "image": "KNS.jpg",
     "name": "Knight of Swords",
     "type": "minor",
     "upright_meaning": "action, impulsiveness, defending beliefs",
-    "reversed_meaning": "no direction, disregard for consequences, unpredictability"
+    "reversed_meaning": "no direction, disregard for consequences, unpredictability",
+    "suit": "Swords",
+    "rank": "Knight"
   },
   "PS": {
     "image": "PS.jpg",
     "name": "Page of Swords",
     "type": "minor",
     "upright_meaning": "curiosity, restlessness, mental energy",
-    "reversed_meaning": "deception, manipulation, all talk"
+    "reversed_meaning": "deception, manipulation, all talk",
+    "suit": "Swords",
+    "rank": "Page"
   },
   "10S": {
     "image": "10S.jpg",
     "name": "Ten of Swords",
     "type": "minor",
     "upright_meaning": "failure, collapse, defeat",
-    "reversed_meaning": "can't get worse, only upwards, inevitable end"
+    "reversed_meaning": "can't get worse, only upwards, inevitable end",
+    "suit": "Swords",
+    "rank": "10"
   },
   "9S": {
     "image": "9S.jpg",
     "name": "Nine of Swords",
     "type": "minor",
     "upright_meaning": "anxiety, hopelessness, trauma",
-    "reversed_meaning": "hope, reaching out, despair"
+    "reversed_meaning": "hope, reaching out, despair",
+    "suit": "Swords",
+    "rank": "9"
   },
   "8S": {
     "image": "8S.jpg",
     "name": "Eight of Swords",
     "type": "minor",
     "upright_meaning": "imprisonment, entrapment, self-victimization",
-    "reversed_meaning": "self acceptance, new perspective, freedom"
+    "reversed_meaning": "self acceptance, new perspective, freedom",
+    "suit": "Swords",
+    "rank": "8"
   },
   "7S": {
     "image": "7S.jpg",
     "name": "Seven of Swords",
     "type": "minor",
     "upright_meaning": "deception, trickery, tactics and strategy",
-    "reversed_meaning": "coming clean, rethinking approach, deception"
+    "reversed_meaning": "coming clean, rethinking approach, deception",
+    "suit": "Swords",
+    "rank": "7"
   },
   "6S": {
     "image": "6S.jpg",
     "name": "Six of Swords",
     "type": "minor",
     "upright_meaning": "transition, leaving behind, moving on",
-    "reversed_meaning": "emotional baggage, unresolved issues, resisting transition"
+    "reversed_meaning": "emotional baggage, unresolved issues, resisting transition",
+    "suit": "Swords",
+    "rank": "6"
   },
   "5S": {
     "image": "5S.jpg",
     "name": "Five of Swords",
     "type": "minor",
     "upright_meaning": "unbridled ambition, win at all costs, sneakiness",
-    "reversed_meaning": "lingering resentment, desire to reconcile, forgiveness"
+    "reversed_meaning": "lingering resentment, desire to reconcile, forgiveness",
+    "suit": "Swords",
+    "rank": "5"
   },
   "4S": {
     "image": "4S.jpg",
     "name": "Four of Swords",
     "type": "minor",
     "upright_meaning": "rest, restoration, contemplation",
-    "reversed_meaning": "restlessness, burnout, stress"
+    "reversed_meaning": "restlessness, burnout, stress",
+    "suit": "Swords",
+    "rank": "4"
   },
   "3S": {
     "image": "3S.jpg",
     "name": "Three of Swords",
     "type": "minor",
     "upright_meaning": "heartbreak, suffering, grief",
-    "reversed_meaning": "recovery, forgiveness, moving on"
+    "reversed_meaning": "recovery, forgiveness, moving on",
+    "suit": "Swords",
+    "rank": "3"
   },
   "2S": {
     "image": "2S.jpg",
     "name": "Two of Swords",
     "type": "minor",
     "upright_meaning": "difficult choices, indecision, stalemate",
-    "reversed_meaning": "lesser of two evils, no right choice, confusion"
+    "reversed_meaning": "lesser of two evils, no right choice, confusion",
+    "suit": "Swords",
+    "rank": "2"
   },
   "AS": {
     "image": "AS.jpg",
     "name": "Ace of Swords",
     "type": "minor",
     "upright_meaning": "breakthrough, clarity, sharp mind",
-    "reversed_meaning": "confusion, brutality, chaos"
+    "reversed_meaning": "confusion, brutality, chaos",
+    "suit": "Swords",
+    "rank": "Ace"
   },
   "KP": {
     "image": "KP.jpg",
     "name": "King of Pentacles",
     "type": "minor",
     "upright_meaning": "abundance, prosperity, security",
-    "reversed_meaning": "greed, indulgence, sensuality"
+    "reversed_meaning": "greed, indulgence, sensuality",
+    "suit": "Pentacles",
+    "rank": "King"
   },
   "QP": {
     "image": "QP.jpg",
     "name": "Queen of Pentacles",
     "type": "minor",
     "upright_meaning": "practicality, creature comforts, financial security",
-    "reversed_meaning": "self-centeredness, jealousy, smothering"
+    "reversed_meaning": "self-centeredness, jealousy, smothering",
+    "suit": "Pentacles",
+    "rank": "Queen"
   },
   "KMP": {
     "image": "KNP.jpg",
     "name": "Knight of Pentacles",
     "type": "minor",
     "upright_meaning": "efficiency, hard work, responsibility",
-    "reversed_meaning": "laziness, obsessiveness, work without reward"
+    "reversed_meaning": "laziness, obsessiveness, work without reward",
+    "suit": "Pentacles",
+    "rank": "Knight"
   },
   "PP": {
     "image": "PP.jpg",
     "name": "Page of Pentacles",
     "type": "minor",
     "upright_meaning": "ambition, desire, diligence",
-    "reversed_meaning": "lack of commitment, greediness, laziness"
+    "reversed_meaning": "lack of commitment, greediness, laziness",
+    "suit": "Pentacles",
+    "rank": "Page"
   },
   "10P": {
     "image": "10P.jpg",
     "name": "Ten of Pentacles",
     "type": "minor",
     "upright_meaning": "legacy, culmination, inheritance",
-    "reversed_meaning": "fleeting success, lack of stability, lack of resources"
+    "reversed_meaning": "fleeting success, lack of stability, lack of resources",
+    "suit": "Pentacles",
+    "rank": "10"
   },
   "9P": {
     "image": "9P.jpg",
     "name": "Nine of Pentacles",
     "type": "minor",
     "upright_meaning": "fruits of labor, rewards, luxury",
-    "reversed_meaning": "reckless spending, living beyond means, false success"
+    "reversed_meaning": "reckless spending, living beyond means, false success",
+    "suit": "Pentacles",
+    "rank": "9"
   },
   "8P": {
     "image": "8P.jpg",
     "name": "Eight of Pentacles",
     "type": "minor",
     "upright_meaning": "apprenticeship, passion, high standards",
-    "reversed_meaning": "lack of passion, uninspired, no motivation"
+    "reversed_meaning": "lack of passion, uninspired, no motivation",
+    "suit": "Pentacles",
+    "rank": "8"
   },
   "7P": {
     "image": "7P.jpg",
     "name": "Seven of Pentacles",
     "type": "minor",
     "upright_meaning": "hard work, perseverance, diligence",
-    "reversed_meaning": "work without results, distractions, lack of rewards"
+    "reversed_meaning": "work without results, distractions, lack of rewards",
+    "suit": "Pentacles",
+    "rank": "7"
   },
   "6P": {
     "image": "6P.jpg",
     "name": "Six of Pentacles",
     "type": "minor",
     "upright_meaning": "charity, generosity, sharing",
-    "reversed_meaning": "strings attached, stinginess, power and domination"
+    "reversed_meaning": "strings attached, stinginess, power and domination",
+    "suit": "Pentacles",
+    "rank": "6"
   },
   "5P": {
     "image": "5P.jpg",
     "name": "Five of Pentacles",
     "type": "minor",
     "upright_meaning": "need, poverty, insecurity",
-    "reversed_meaning": "recovery, charity, improvement"
+    "reversed_meaning": "recovery, charity, improvement",
+    "suit": "Pentacles",
+    "rank": "5"
   },
   "4P": {
     "image": "4P.jpg",
     "name": "Four of Pentacles",
     "type": "minor",
     "upright_meaning": "conservation, frugality, security",
-    "reversed_meaning": "greediness, stinginess, possessiveness"
+    "reversed_meaning": "greediness, stinginess, possessiveness",
+    "suit": "Pentacles",
+    "rank": "4"
   },
   "3P": {
     "image": "3P.jpg",
     "name": "Three of Pentacles",
     "type": "minor",
     "upright_meaning": "teamwork, collaboration, building",
-    "reversed_meaning": "lack of teamwork, disorganized, group conflict"
+    "reversed_meaning": "lack of teamwork, disorganized, group conflict",
+    "suit": "Pentacles",
+    "rank": "3"
   },
   "2P": {
     "image": "2P.jpg",
     "name": "Two of Pentacles",
     "type": "minor",
     "upright_meaning": "balancing decisions, priorities, adapting to change",
-    "reversed_meaning": "loss of balance, disorganized, overwhelmed"
+    "reversed_meaning": "loss of balance, disorganized, overwhelmed",
+    "suit": "Pentacles",
+    "rank": "2"
   },
   "AP": {
     "image": "AP.jpg",
     "name": "Ace of Pentacles",
     "type": "minor",
     "upright_meaning": "opportunity, prosperity, new venture",
-    "reversed_meaning": "lost opportunity, missed chance, bad investment"
+    "reversed_meaning": "lost opportunity, missed chance, bad investment",
+    "suit": "Pentacles",
+    "rank": "Ace"
   }
 }

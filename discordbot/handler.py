@@ -273,3 +273,49 @@ async def handle_oblique(
             "Error (if you're seeing this, please let us know!): " + str(e),
             ephemeral=True,
         )
+
+
+# Get autocomplete information for the cards in the current deck to get info about
+async def autocomplete_info(ctx: discord.AutocompleteContext):
+    opts = get_opts(ctx.interaction)
+    names = tarot.get_card_info_names(opts.deck)
+    return [name for name in names if name.lower().startswith(ctx.value.lower())]
+
+
+async def handle_info(interaction: discord.Interaction, card: str):
+    try:
+        opts = get_opts(interaction)
+        await interaction.response.defer(ephemeral=opts.private)
+        # todo: handle embed or no embed
+        data = tarot.get_card_info(opts.deck, card)
+        if data == None:
+            await interaction.respond("Unknown card", ephemeral=True)
+            return
+
+        im = data["image"]
+        with BytesIO() as buf:
+            if opts.small_images:
+                im = im.reduce(2)
+            im.save(buf, "PNG", optimize=True)
+            buf.seek(0)
+            file = discord.File(fp=buf, filename=f"image.png")
+
+        embed = discord.Embed(
+            title="Info about {}".format(data["card_name"]),
+            type="rich",
+            color=color,
+        )
+        for key, val in data["details"]:
+            embed.add_field(
+                name=key,
+                value=val,
+                inline=False,
+            )
+        embed.set_image(url=f"attachment://image.png")
+        await interaction.followup.send(file=file, embed=embed)
+    except Exception as e:
+        print(e)
+        await interaction.followup.send(
+            "Error (if you're seeing this, please let us know!): " + str(e),
+            ephemeral=True,
+        )
