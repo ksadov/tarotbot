@@ -65,7 +65,6 @@ def build_response(
     cards = tarot.draw(
         read.numcards, opts.deck, opts.invert, MajorMinor(opts.majorminor)
     )
-
     MAX_COUNT = 25 if opts.embed else 24
     cards = (
         [cards[start : start + MAX_COUNT] for start in range(0, len(cards), MAX_COUNT)]
@@ -87,7 +86,6 @@ def build_response(
             files.append(file)
         if embed:
             embeds.append(embed)
-
     return messages, files, embeds
 
 
@@ -122,7 +120,6 @@ def message_and_files(
     file = None
     message = who
     embed = None
-
     if opts.image:
         im = tarot.cardimg(cards, read.imgfunc)
         with BytesIO() as buf:
@@ -131,7 +128,6 @@ def message_and_files(
             im.save(buf, "PNG", optimize=True)
             buf.seek(0)
             file = discord.File(fp=buf, filename=f"image_{count}.png")
-
     if opts.embed:
         embed = discord.Embed(
             title="{} reading for {}".format(
@@ -145,7 +141,6 @@ def message_and_files(
             type="rich",
             color=color,
         )
-
         if opts.text:
             for i, (n, v) in enumerate(response):
                 embed.add_field(

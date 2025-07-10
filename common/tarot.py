@@ -83,8 +83,8 @@ class Card:
     def details(self) -> list[tuple[str, str]]:
         return []
 
-    def cardtxt(self, facing: Facing) -> str:
-        return ""
+    def cardtxt(self, facing: Facing) -> tuple[str, str]:
+        return ("", "")
 
 
 @unique
@@ -106,8 +106,8 @@ class PlayingCard(Card):
     def details(self) -> list[tuple[str, str]]:
         return [("Suit:", self.suit.value), ("Meaning:", self.meaning)]
 
-    def cardtxt(self, facing: Facing) -> str:
-        return "{} ({})".format(self.name, self.meaning)
+    def cardtxt(self, facing: Facing) -> tuple[str, str]:
+        return (self.name, self.meaning)
 
 
 @unique
@@ -151,9 +151,10 @@ class TarotCard(Card):
         )
         return d
 
-    def cardtxt(self, facing: Facing) -> str:
-        return "{} ({})".format(
-            self.name, self.upright if facing == Facing.UPRIGHT else self.reverse
+    def cardtxt(self, facing: Facing) -> tuple[str, str]:
+        return (
+            "{} ({})".format(self.name, facing.value),
+            self.upright if facing == Facing.UPRIGHT else self.reverse,
         )
 
 
