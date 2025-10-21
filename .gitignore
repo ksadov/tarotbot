@@ -10,3 +10,4 @@ backup
 *~
 discordbot/backup.*
 settings.db
+*.log

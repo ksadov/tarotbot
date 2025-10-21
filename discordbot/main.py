@@ -1,4 +1,5 @@
 import os
+import sys
 from common.tarot import (
     SIMPLE_READINGS,
     NCardR,
@@ -18,6 +19,24 @@ from discordbot.handler import (
     handle_info,
 )
 import common.db as db
+import logging
+
+logging.basicConfig(filename="log.log", format="%(asctime)s - %(name)s - %(message)s")
+logger = logging.getLogger(__name__)
+
+
+def handle_exception(exc_type, exc_value, exc_traceback):
+    if issubclass(exc_type, KeyboardInterrupt):
+        sys.__excepthook__(exc_type, exc_value, exc_traceback)
+        return
+
+    logger.exception(
+        "Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback)
+    )
+    sys.__excepthook__(exc_type, exc_value, exc_traceback)
+
+
+sys.excepthook = handle_exception
 
 # TODO update this
 help_message = """For support or to request new features, join our discord server. Feedback welcome!\n

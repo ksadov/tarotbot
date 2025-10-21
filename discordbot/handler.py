@@ -272,9 +272,12 @@ async def handle_oblique(
 
 # Get autocomplete information for the cards in the current deck to get info about
 async def autocomplete_info(ctx: discord.AutocompleteContext):
-    opts = get_opts(ctx.interaction)
-    names = tarot.get_card_info_names(opts.deck)
-    return [name for name in names if name.lower().startswith(ctx.value.lower())]
+    try:
+        opts = get_opts(ctx.interaction)
+        names = tarot.get_card_info_names(opts.deck)
+        return [name for name in names if name.lower().startswith(ctx.value.lower())]
+    except Exception as e:
+        print(e)
 
 
 async def handle_info(interaction: discord.Interaction, card: str):
