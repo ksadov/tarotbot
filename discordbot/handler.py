@@ -7,8 +7,11 @@ import os
 from discord.ext.commands import Context
 from discord.ext.pages import Page, Paginator
 from typing import List, Tuple
+import asyncio
+from concurrent.futures import ThreadPoolExecutor
 
 color = discord.Colour(0x6B1BF8)
+POOL = ThreadPoolExecutor()
 
 
 async def handle(
@@ -19,7 +22,9 @@ async def handle(
     try:
         opts = get_opts(interaction)
         await interaction.response.defer(ephemeral=opts.private)
-        messages, files, embeds = build_response(interaction, read, opts, targetUser)
+        messages, files, embeds = await build_response(
+            interaction, read, opts, targetUser
+        )
         if len(messages) == 1:
             kwargs: dict = {"content": messages[0]}
             if len(files) > 0:
@@ -56,7 +61,7 @@ async def handle(
         )
 
 
-def build_response(
+async def build_response(
     interaction: discord.Interaction,
     read,
     opts,
@@ -78,7 +83,7 @@ def build_response(
     embeds: list[discord.Embed] = []
 
     for i in range(0, len(cards)):
-        message, file, embed = message_and_files(
+        message, file, embed = await message_and_files(
             cards[i], opts, interaction, read, i, len(cards), MAX_COUNT, targetUser
         )
         messages.append(message)
@@ -97,7 +102,7 @@ def get_opts(interaction: discord.Interaction):
     return db.get(uid, gid)
 
 
-def message_and_files(
+async def message_and_files(
     cards: List[Tuple[Card, Facing]],
     opts,
     interaction,
@@ -121,11 +126,14 @@ def message_and_files(
     message = who
     embed = None
     if opts.image:
-        im = tarot.cardimg(cards, read.imgfunc)
+        loop = asyncio.get_event_loop()
+        im = await loop.run_in_executor(POOL, tarot.cardimg, cards, read.imgfunc)
         with BytesIO() as buf:
             if opts.small_images:
-                im = im.reduce(2)
-            im.save(buf, "PNG", optimize=True)
+                im = await loop.run_in_executor(POOL, im.reduce, 2)
+            await loop.run_in_executor(
+                POOL, lambda: im.save(buf, "PNG", compress_level=1)
+            )
             buf.seek(0)
             file = discord.File(fp=buf, filename=f"image_{count}.png")
     if opts.embed:
@@ -294,7 +302,7 @@ async def handle_info(interaction: discord.Interaction, card: str):
         with BytesIO() as buf:
             if opts.small_images:
                 im = im.reduce(2)
-            im.save(buf, "PNG", optimize=True)
+            im.save(buf, "PNG", compress_level=1)
             buf.seek(0)
             file = discord.File(fp=buf, filename=f"image.png")
 

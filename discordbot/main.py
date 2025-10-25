@@ -268,3 +268,4 @@ if __name__ == "__main__":
 # add pooling to sql
 # oracle cards
 # add as right click option on messages (as the question)
+# fix 403 Forbidden (error code: 50001): Missing Access on large paginator access
