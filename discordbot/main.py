@@ -77,6 +77,7 @@ bot = discord.AutoShardedBot(
 @bot.event
 async def on_ready():
     bot.add_view(ReadingSelectorView())
+    logger.info("TarotBot is running")
     print("TarotBot is running")
 
 
@@ -158,7 +159,9 @@ async def _tarotsettings(ctx: discord.ApplicationContext):
     await ctx.defer(ephemeral=True)
     await ctx.respond(
         "Customize your tarot readings",
-        view=SettingsView(ctx.interaction.guild_id, str(ctx.interaction.user.id)),
+        view=await SettingsView.create(
+            ctx.interaction.guild_id, str(ctx.interaction.user.id)
+        ),
         ephemeral=True,
     )
 

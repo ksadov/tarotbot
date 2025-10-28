@@ -2,7 +2,7 @@ import discord
 from common.tarot import SIMPLE_READINGS, ReadingType, DECKS, MajorMinor
 import common.db as db
 from discordbot.handler import handle
-import os
+import asyncio
 
 
 class ReadingButton(discord.ui.Button):
@@ -47,7 +47,7 @@ class DeckSelector(discord.ui.Select):
 
     async def callback(self, interaction: discord.Interaction):
         await interaction.response.defer()
-        db.update(self.dbuser, deck=DECKS[str(self.values[0])].shortname)
+        await db.update(self.dbuser, deck=DECKS[str(self.values[0])].shortname)
         await interaction.followup.send(
             "New settings have been saved", ephemeral=True, delete_after=2.0
         )
@@ -109,7 +109,7 @@ class ReadingSelector(discord.ui.Select):
 
     async def callback(self, interaction: discord.Interaction):
         await interaction.response.defer()
-        db.update(
+        await db.update(
             self.dbuser,
             text="text" in self.values,
             descriptions="descriptions" in self.values,
@@ -156,7 +156,7 @@ class ArcanaSelector(discord.ui.Select):
 
     async def callback(self, interaction: discord.Interaction):
         await interaction.response.defer()
-        db.update(self.dbuser, majorminor=MajorMinor(self.values[0]).value)
+        await db.update(self.dbuser, majorminor=MajorMinor(self.values[0]).value)
         await interaction.followup.send(
             "New settings have been saved", ephemeral=True, delete_after=2.0
         )
@@ -165,10 +165,15 @@ class ArcanaSelector(discord.ui.Select):
 class SettingsView(discord.ui.View):
     def __init__(self, guildid: int | None, userid: str):
         super().__init__()
-        dbuser = db.get(userid, str(guildid))
-        self.add_item(ReadingSelector(dbuser))
-        self.add_item(DeckSelector(dbuser))
-        self.add_item(ArcanaSelector(dbuser))
+
+    @classmethod
+    async def create(cls, guildid: int | None, userid: str):
+        view = cls(guildid, userid)
+        dbuser = await db.get(userid, str(guildid))
+        view.add_item(ReadingSelector(dbuser))
+        view.add_item(DeckSelector(dbuser))
+        view.add_item(ArcanaSelector(dbuser))
+        return view
 
 
 class AboutView(discord.ui.View):
