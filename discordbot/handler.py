@@ -20,7 +20,7 @@ async def handle(
     targetUser: discord.Member | None = None,
 ):
     try:
-        opts = get_opts(interaction)
+        opts = await get_opts(interaction)
         await interaction.response.defer(ephemeral=opts.private)
         messages, files, embeds = await build_response(
             interaction, read, opts, targetUser
@@ -94,12 +94,12 @@ async def build_response(
     return messages, files, embeds
 
 
-def get_opts(interaction: discord.Interaction):
+async def get_opts(interaction: discord.Interaction):
     gid = str(interaction.guild_id)
     if interaction.user is None:
         raise Exception("No user found")
     uid = str(interaction.user.id)
-    return db.get(uid, gid)
+    return await db.get(uid, gid)
 
 
 async def message_and_files(
@@ -178,7 +178,7 @@ async def handle_8ball(
     other_user: discord.Member | None = None,
 ):
     try:
-        opts = get_opts(interaction)
+        opts = await get_opts(interaction)
         await interaction.response.defer(ephemeral=opts.private)
         image, description = eightball.shake()
         message = (
@@ -237,7 +237,7 @@ async def handle_oblique(
     other_user: discord.Member | None = None,
 ):
     try:
-        opts = get_opts(interaction)
+        opts = await get_opts(interaction)
         await interaction.response.defer(ephemeral=opts.private)
         strategy = oblique_strategies.oblique()
         message = (
@@ -281,7 +281,7 @@ async def handle_oblique(
 # Get autocomplete information for the cards in the current deck to get info about
 async def autocomplete_info(ctx: discord.AutocompleteContext):
     try:
-        opts = get_opts(ctx.interaction)
+        opts = await get_opts(ctx.interaction)
         names = tarot.get_card_info_names(opts.deck)
         return [name for name in names if name.lower().startswith(ctx.value.lower())]
     except Exception as e:
@@ -290,7 +290,7 @@ async def autocomplete_info(ctx: discord.AutocompleteContext):
 
 async def handle_info(interaction: discord.Interaction, card: str):
     try:
-        opts = get_opts(interaction)
+        opts = await get_opts(interaction)
         await interaction.response.defer(ephemeral=opts.private)
         # todo: handle embed or no embed
         data = tarot.get_card_info(opts.deck, card)

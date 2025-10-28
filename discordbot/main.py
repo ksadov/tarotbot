@@ -20,6 +20,7 @@ from discordbot.handler import (
 )
 import common.db as db
 import logging
+import asyncio
 
 logging.basicConfig(filename="log.log", format="%(asctime)s - %(name)s - %(message)s")
 logger = logging.getLogger(__name__)
@@ -59,10 +60,17 @@ else:
     token = os.getenv("DISCORD_TOKEN")
     application_id = os.getenv("DISCORD_APPLICATION_ID")
     guild_ids = None
+    # guild_ids = os.getenv("GUILD_IDS")
+    # if guild_ids is not None:
+    #     guild_ids = [int(id) for id in guild_ids.split(",")]
 
+
+intents = discord.Intents.none()
+intents.guilds = True
 bot = discord.AutoShardedBot(
     debug_guilds=guild_ids,
     activity=discord.Game("/tarot for a reading. /tarothelp to see all commands"),
+    intents=intents,
 )
 
 
@@ -255,7 +263,12 @@ help_message += "playing card meanings from https://pathandtarot.com/playing-car
 
 
 def main():
-    db.init()
+    if token is None:
+        logger.error("No bot token found")
+        return
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(db.init())
+    # await db.init()
     init_decks()
     bot.run(token)
 
